@@ -17,6 +17,21 @@ Entries are grouped under these section headings (in order):
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-11
+
+### Added
+- `governance/workspace-skills/shared/feature-spec-workflow/` — new shared skill defining the per-feature `specs/<NNN-name>/{spec,plan,tasks}.md` convention. Triggered when starting a non-trivial change, resuming after a session break, or handling ambiguous requests. Mirrored into both `.codex/skills/` and `.claude/skills/`.
+- `references/spec-template.md`, `plan-template.md`, `tasks-template.md` — fill-in templates an AI tool can copy into a new feature directory.
+- `references/convention-sources.md` — provenance for the convention, citing GitHub Spec Kit, Kiro, BMAD, PRP, Superpowers, Anthropic Plan Mode, AGENTS.md, and the Feb-2026 ETH Zurich study on context files.
+
+### Changed
+- `governance/workspace/AGENTS.md.tmpl` — added `## Active Feature Tracking` section between `AI Vibe Coding Guardrails` and `Shared Governance Layout`. Tells any AI tool entering the workspace to check `specs/` before writing code and resume from the first unchecked task.
+- `manifests/default.yaml` — `workspace_skills_codex` and `workspace_skills_claude` now also install `feature-spec-workflow`; `constitution.version` bumped to `0.2.0`.
+
+### Notes
+- The convention deliberately matches GitHub Spec Kit's directory layout so `/specify`, `/plan`, and `/tasks` slash commands work unmodified. Compatible with Kiro (`requirements.md` ≈ `spec.md`, `design.md` ≈ `plan.md`), ECC (`/prp-prd` → `/prp-plan` → `/prp-implement`), and Superpowers (`brainstorming` → `writing-plans` → `executing-plans`).
+- No backwards-incompatible changes. Existing v0.1.0 installs upgrade cleanly via `./scripts/update.sh`.
+
 ## [0.1.0] - 2026-04-29
 
 ### Added
@@ -41,5 +56,6 @@ Entries are grouped under these section headings (in order):
   - `superpowers`, `claude-mem`, `memsearch` plugin internals.
 - Snapshots may live under `upstream/` for diff and recovery purposes.
 
-[Unreleased]: ../../compare/v0.1.0...HEAD
+[Unreleased]: ../../compare/v0.2.0...HEAD
+[0.2.0]: ../../compare/v0.1.0...v0.2.0
 [0.1.0]: ../../releases/tag/v0.1.0

@@ -103,6 +103,31 @@ Forbidden:
 - carrying one repo's local conventions into another repo without evidence
 - adding abstraction before repeated need is established
 
+## Active Feature Tracking
+
+For any non-trivial change (anything not describable as a one-sentence diff),
+the persistent state lives in `${WORKSPACE_ROOT}/specs/<NNN-feature>/`:
+
+- `spec.md`  — intent, acceptance criteria, status (Draft | InProgress | Review | Done | Abandoned)
+- `plan.md`  — technical blueprint, affected files, risks
+- `tasks.md` — `- [ ]` checkbox list (machine-parsable progress tracker)
+
+**Any AI tool entering this workspace must:**
+
+1. Before writing code, check `specs/` for an in-progress feature.
+2. If one exists and matches the user's request, resume from the first `- [ ]` task.
+3. If none exists and the request is non-trivial, create one via the
+   `feature-spec-workflow` skill (installed at `.codex/skills/feature-spec-workflow/`
+   and `.claude/skills/feature-spec-workflow/`). The skill ships fill-in
+   templates under its `references/` directory.
+4. Mark `- [x]` immediately on task completion. Commit per task.
+
+State lives in files, not in chat. Sessions are disposable; `git log` is authoritative.
+
+This layout is intentionally compatible with GitHub Spec Kit, Kiro, ECC's
+`/prp-*` commands, and Superpowers' `writing-plans` skill. Use whichever
+toolchain you prefer — the on-disk artifacts stay the same.
+
 ## Shared Governance Layout
 
 Preferred top-level artifact layout:
