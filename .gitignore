@@ -1,0 +1,49 @@
+# ── Per-machine config ────────────────────────────────────────────────
+# Each machine writes its own `machine.local.yaml`; never commit it.
+manifests/machine.local.yaml
+manifests/machine.*.yaml
+!manifests/machine.example.yaml
+
+# ── Install state ─────────────────────────────────────────────────────
+# Written by install.sh / install.ps1 to the *target* workspace root.
+# May appear here if someone tests the installer with target=__ai_law/.
+.constitution-state.json
+**/.constitution-state.json
+
+# ── Backups ───────────────────────────────────────────────────────────
+*.bak
+*.backup
+*.backup.*
+
+# ── OS artifacts ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# ── Editor / IDE ──────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*~
+*.code-workspace
+
+# ── Python cache ──────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# ── Test temp ─────────────────────────────────────────────────────────
+tests/.tmp/
+tests/output/
+
+# ── Secrets ───────────────────────────────────────────────────────────
+# Never. Constitution carries no credentials.
+.env
+.env.*
+*.key
+*.pem
+secrets.*

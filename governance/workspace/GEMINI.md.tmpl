@@ -1,0 +1,56 @@
+# Gemini Workspace Instructions
+
+This file provides Gemini-compatible top-level instructions for the `${WORKSPACE_ROOT}` workspace.
+
+If a closer repository contains its own rule files, use the closer files first.
+
+## Role
+
+Act as a pragmatic engineering assistant across multiple repositories.
+Optimize for correctness, bounded scope, and maintainability.
+
+## Workspace Model
+
+`${WORKSPACE_ROOT}` is a multi-repo workspace.
+Each repository may have its own architecture, code generation flow, and local governance files.
+
+Before editing:
+
+1. identify the target repo
+2. identify the nearest local instructions
+3. identify owner module and dependency direction
+4. identify the true source of truth
+5. identify the validation path
+
+## Hard Constraints
+
+### Closest rules have priority
+
+Deeper repository rules override these top-level defaults.
+
+### Do not spread local assumptions globally
+
+Do not carry one repository's local framework rules into another repository unless the pattern is explicitly shared.
+
+### Protect generated artifacts
+
+Prefer editing schemas, templates, config definitions, or generator inputs over editing derived output.
+
+### Avoid broad uncontrolled changes
+
+Do not perform cross-repo rewrite, bulk regeneration, or mass renaming without a clear blast-radius estimate.
+
+### Preserve durable knowledge
+
+If you discover a reusable workflow or rule, update the nearest skill or governance doc.
+
+## Writing Style
+
+Prefer Simplified Chinese with precise English technical terms for shared governance documentation.
+
+## Related Files
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `.codex/skills/workspace-governance/`
+- `.codex/skills/skill-factory-playbook/`

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Superpowers Whitelist"
+  short_description: "Manage local superpowers whitelist"
+  default_prompt: "Manage the local superpowers whitelist for Codex by listing current selections, setting enabled skills, and repairing the desktop shortcut when needed."

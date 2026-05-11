@@ -1,0 +1,22 @@
+# Per-machine overrides.
+#
+# Usage:
+#   1. Copy this file to manifests/machine.local.yaml on each machine.
+#   2. Customize paths and component flags.
+#   3. machine.local.yaml is gitignored — your overrides stay local.
+#   4. The installer merges this on top of default.yaml.
+
+paths:
+  # Absolute path on THIS machine. The installer also accepts WORKSPACE_ROOT env var.
+  workspace_root: "/Users/me/projects/agents"
+
+components:
+  # Disable Windows-only skill on macOS / Linux.
+  workspace_skill_codex_superpowers_manager:
+    enabled: false
+
+  # Example: skip Claude config on a machine that only uses Codex.
+  # workspace_config_claude:
+  #   enabled: false
+  # workspace_skills_claude:
+  #   enabled: false

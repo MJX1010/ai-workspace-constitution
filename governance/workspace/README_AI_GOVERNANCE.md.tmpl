@@ -1,0 +1,83 @@
+# AI Governance Overview
+
+This document is a human-facing overview of AI governance for `${WORKSPACE_ROOT}`.
+
+It is not the primary rule source.
+Canonical rule priority is:
+
+1. system or developer instructions
+2. user request
+3. nearest `AGENTS.md`
+4. parent `AGENTS.md`
+5. local skills
+
+## What This Layer Is For
+
+The `${WORKSPACE_ROOT}` layer exists to define shared governance across multiple repositories.
+
+It is for:
+
+- top-level instruction hierarchy
+- cross-repo agent behavior defaults
+- generic `AI Vibe Coding` guardrails
+- reusable skill-creation and governance workflows
+
+It is not for:
+
+- one repository's internal architecture
+- one framework's code placement rules
+- feature-specific implementation guidance
+
+## Current Governance Files
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `GEMINI.md`
+- `.codex/config.toml`
+- `.codex/skills/workspace-governance/`
+- `.codex/skills/skill-factory-playbook/`
+- `.claude/skills/workspace-governance/`
+- `.claude/skills/skill-factory-playbook/`
+
+## Overlay Model
+
+Each repository may add its own overlay.
+
+Example:
+
+- `${WORKSPACE_ROOT}/DragonPow2/DragonPow2_Trunk/client/AGENTS.md`
+
+That repo-level file should inherit this top-level layer and then add project-specific constraints.
+
+## Core Principles
+
+### Closest Rule Wins
+
+More local instructions override broader ones.
+
+### Source of Truth First
+
+Modify the true source, not the nearest derived artifact.
+
+### Ownership Before Edits
+
+Identify repo, module, dependency direction, and validation path before substantial edits.
+
+### Minimal but Complete Changes
+
+Include implementation, required sync points, knowledge updates, and validation.
+
+### Durable Knowledge Must Be Captured
+
+Stable discoveries should be written back into local skills or governance docs.
+
+## Constitution Source
+
+This workspace's governance is materialised by the **AI Workspace Constitution** repo.
+
+If you need to update these rules across all your machines, edit the templates in
+`<constitution-repo>/governance/workspace/*.tmpl`, commit, push, and run `update.sh`
+on each target machine.
+
+Do **not** edit the rendered files in `${WORKSPACE_ROOT}` directly — drift will be
+detected by `verify.sh` on the next run.

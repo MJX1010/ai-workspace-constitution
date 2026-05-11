@@ -1,0 +1,29 @@
+# Default: text files normalize to LF in the repo.
+# Working-tree line endings are decided per-OS by Git's autocrlf,
+# but the repo always stores LF so diffs stay clean.
+* text=auto eol=lf
+
+# Shell scripts must keep LF on disk (Windows Git Bash + macOS + Linux all run them).
+*.sh text eol=lf
+
+# PowerShell prefers CRLF on disk on Windows.
+*.ps1 text eol=crlf
+*.psd1 text eol=crlf
+*.psm1 text eol=crlf
+
+# Markdown / config — LF.
+*.md text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.tmpl text eol=lf
+
+# Binary.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.zip binary
+*.7z binary
+*.gz binary

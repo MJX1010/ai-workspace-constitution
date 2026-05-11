@@ -1,0 +1,92 @@
+---
+name: manage-superpowers-whitelist
+description: Manage the local obra/superpowers whitelist for Codex. Use when the user wants to enable, disable, list, or review which superpowers skills are active, keep `${USERPROFILE}\.agents\skills\superpowers` and `${USERPROFILE}\.codex\AGENTS.md` in sync, or recreate the `Superpowers Skills Manager` desktop shortcut.
+---
+
+# Manage Superpowers Whitelist
+
+> **Scope**: Codex on Windows only. The supporting scripts use Windows junctions
+> and PowerShell. The skill is gated to `harness=codex` + `os=windows` in
+> `manifests/default.yaml`. Do not install on macOS / Linux.
+
+## Overview
+
+Use the local manager scripts instead of editing links or `AGENTS.md` by hand. The non-interactive PowerShell entrypoint is the source of truth for agent-driven changes; the batch file and desktop shortcut are convenience launchers for human use.
+
+## Core Commands
+
+### List current state
+
+Run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ${WORKSPACE_ROOT}\.codex\scripts\manage-superpowers.ps1 -ListOnly
+```
+
+Use this when the user asks which superpowers skills are currently enabled.
+
+### Set the whitelist
+
+Run the PowerShell script with the full desired enabled set:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ${WORKSPACE_ROOT}\.codex\scripts\manage-superpowers.ps1 -SetEnabled brainstorming
+```
+
+For multiple skills, pass them as separate values:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ${WORKSPACE_ROOT}\.codex\scripts\manage-superpowers.ps1 -SetEnabled brainstorming systematic-debugging writing-plans
+```
+
+Always pass the complete desired whitelist, not just incremental additions. The script removes no-longer-enabled links, creates missing junctions, and rewrites the managed whitelist block in `${USERPROFILE}\.codex\AGENTS.md`.
+
+### Launch the interactive picker
+
+For a user-facing picker, run:
+
+```powershell
+${WORKSPACE_ROOT}\.codex\scripts\manage-superpowers.bat
+```
+
+The picker uses `Up/Down` to move, `Space` to toggle, `S` to save, and `Q` to exit.
+
+### Recreate the desktop shortcut
+
+If the user wants the double-click launcher restored, run:
+
+```powershell
+$desktop = Join-Path $env:USERPROFILE 'Desktop'
+$shortcutPath = Join-Path $desktop 'Superpowers Skills Manager.lnk'
+$targetPath = '${WORKSPACE_ROOT}\.codex\scripts\manage-superpowers.bat'
+$workingDir = '${WORKSPACE_ROOT}\.codex\scripts'
+$wsh = New-Object -ComObject WScript.Shell
+$shortcut = $wsh.CreateShortcut($shortcutPath)
+$shortcut.TargetPath = $targetPath
+$shortcut.WorkingDirectory = $workingDir
+$shortcut.Description = 'Manage enabled superpowers skills for Codex'
+$shortcut.IconLocation = "$env:SystemRoot\System32\shell32.dll,21"
+$shortcut.Save()
+```
+
+Writing the shortcut usually requires escalated permission in this environment because it targets the user desktop outside `${WORKSPACE_ROOT}`.
+
+## Managed Surfaces
+
+Treat these as one managed set:
+
+- `${USERPROFILE}\.codex\superpowers\skills` is the source library
+- `${USERPROFILE}\.agents\skills\superpowers` exposes only enabled skills as junctions
+- `${USERPROFILE}\.codex\AGENTS.md` contains the managed whitelist block and startup reporting rule
+- `${USERPROFILE}\Desktop\Superpowers Skills Manager.lnk` is the optional shortcut
+
+Do not manually edit only one surface unless the script is unavailable.
+
+## Verification
+
+After changing the whitelist:
+
+- Confirm the script output lists the intended enabled skills
+- Confirm `${USERPROFILE}\.agents\skills\superpowers` contains only the enabled skill links
+- Confirm the managed block in `${USERPROFILE}\.codex\AGENTS.md` matches the same set
+- Tell the user to restart Codex before expecting the new whitelist to apply

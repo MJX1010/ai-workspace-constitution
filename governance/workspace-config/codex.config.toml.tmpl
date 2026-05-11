@@ -1,0 +1,13 @@
+# Codex workspace configuration.
+# Rendered to: ${WORKSPACE_ROOT}/.codex/config.toml
+
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+personality = "pragmatic"
+project_root_markers = ["AGENTS.md", ".git", ".svn", "package.json", "pyproject.toml", ".claude", ".codex"]
+project_doc_fallback_filenames = ["CLAUDE.md", "GEMINI.md"]
+project_doc_max_bytes = 65536
+
+[windows]
+sandbox = "elevated"

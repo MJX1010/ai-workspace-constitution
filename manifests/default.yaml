@@ -1,0 +1,109 @@
+# Default install profile for the AI Workspace Constitution.
+#
+# Resolution order at install time (highest wins):
+#   1. CLI flags
+#   2. Environment variables (WORKSPACE_ROOT, ...)
+#   3. manifests/machine.local.yaml (per-machine, gitignored)
+#   4. manifests/default.yaml (this file, the canonical baseline)
+#
+# Each component declares:
+#   sources : list of template files or directories under governance/
+#   target  : absolute or ${VAR}-templated destination on the target machine
+#   mode    : write strategy (default: replace; alternatives: append, marker-section)
+#   os      : optional OS allow-list  (windows | macos | linux)
+#   harness : optional harness allow-list (codex | claude | gemini | cursor | trae | kiro | opencode)
+
+constitution:
+  version: "0.1.0"
+
+paths:
+  # Required at install time.
+  # Bash: WORKSPACE_ROOT=/path/to/workspace ./scripts/install.sh
+  # PowerShell: $env:WORKSPACE_ROOT = "D:\path"; .\scripts\install.ps1
+  workspace_root: "${WORKSPACE_ROOT}"
+  # Auto-detected from $HOME (Unix) or $env:USERPROFILE (Windows) at install time.
+  user_home: "${HOME}"
+
+components:
+
+  # ── Workspace top-level governance ─────────────────────────────────
+  workspace_governance:
+    enabled: true
+    description: "Top-level AGENTS.md / CLAUDE.md / GEMINI.md / README_AI_GOVERNANCE.md"
+    sources:
+      - governance/workspace/AGENTS.md.tmpl
+      - governance/workspace/CLAUDE.md.tmpl
+      - governance/workspace/GEMINI.md.tmpl
+      - governance/workspace/README_AI_GOVERNANCE.md.tmpl
+    target_dir: "${WORKSPACE_ROOT}"
+    mode: replace
+
+  # ── Workspace skills (Codex mirror) ────────────────────────────────
+  workspace_skills_codex:
+    enabled: true
+    description: "Codex-side mirror of workspace-governance + skill-factory-playbook skills"
+    sources:
+      - governance/workspace-skills/shared/workspace-governance/
+      - governance/workspace-skills/shared/skill-factory-playbook/
+    target_dir: "${WORKSPACE_ROOT}/.codex/skills"
+    mode: replace
+
+  # ── Workspace skills (Claude mirror) ───────────────────────────────
+  workspace_skills_claude:
+    enabled: true
+    description: "Claude-side mirror of workspace-governance + skill-factory-playbook skills"
+    sources:
+      - governance/workspace-skills/shared/workspace-governance/
+      - governance/workspace-skills/shared/skill-factory-playbook/
+    target_dir: "${WORKSPACE_ROOT}/.claude/skills"
+    mode: replace
+
+  # ── Codex-only / Windows-only skill ────────────────────────────────
+  workspace_skill_codex_superpowers_manager:
+    enabled: true
+    description: "Manage local superpowers whitelist for Codex on Windows"
+    os: [windows]
+    harness: [codex]
+    sources:
+      - governance/workspace-skills/codex-only/manage-superpowers-whitelist/
+    target_dir: "${WORKSPACE_ROOT}/.codex/skills"
+    mode: replace
+
+  # ── Per-harness configs ────────────────────────────────────────────
+  workspace_config_codex:
+    enabled: true
+    description: "Codex workspace config (sandbox, project markers)"
+    sources:
+      - governance/workspace-config/codex.config.toml.tmpl
+    target: "${WORKSPACE_ROOT}/.codex/config.toml"
+    mode: replace
+
+  workspace_config_claude:
+    enabled: true
+    description: "Claude Code workspace settings (enabled plugins)"
+    sources:
+      - governance/workspace-config/claude.settings.local.json.tmpl
+    target: "${WORKSPACE_ROOT}/.claude/settings.local.json"
+    mode: replace
+
+  # ── Global user-section in ~/.claude/CLAUDE.md ────────────────────
+  # Inserted between <!-- USER:CONSTITUTION:START --> and <!-- USER:CONSTITUTION:END -->.
+  # Other regions (OMC block, ECC block) are NOT touched.
+  global_claude_user_section:
+    enabled: true
+    description: "User-authored Environment Correction + Issue Investigation Discipline"
+    sources:
+      - governance/global/claude/CLAUDE.md.partial.tmpl
+    target: "${HOME}/.claude/CLAUDE.md"
+    mode: marker-section
+    section_marker_start: "<!-- USER:CONSTITUTION:START"
+    section_marker_end: "<!-- USER:CONSTITUTION:END -->"
+
+backup:
+  enabled: true
+  suffix_format: ".backup.{TIMESTAMP}"   # ISO-8601 compact, e.g. .backup.20260429T132300Z
+
+verify:
+  on_install: true
+  on_update: true
+  fail_on_drift: false   # If true, verify exits non-zero when files differ from expected hashes.

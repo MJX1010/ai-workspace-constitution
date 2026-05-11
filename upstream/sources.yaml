@@ -1,0 +1,101 @@
+# Upstream sources to watch for documentation drift.
+#
+# Run:
+#   ./scripts/upstream-watch.sh --check     # fetch + report diffs (no writes)
+#   ./scripts/upstream-watch.sh --apply     # save new snapshots into upstream/docs/
+#
+# Workflow:
+#   1. --check periodically (weekly/monthly).
+#   2. If drift is reported, --apply to capture the new snapshot.
+#   3. `git diff upstream/docs/` to read what changed upstream.
+#   4. Decide whether to absorb the change into governance/.
+#   5. If yes: edit governance/ files, bump VERSION, add CHANGELOG `Upstream` entry.
+#   6. Commit and push.
+
+policy:
+  user_agent: "ai-workspace-constitution"
+  timeout_seconds: 30
+
+sources:
+  # ── Anthropic / Claude ──────────────────────────────────────────────
+  - id: anthropic-claude-code-best-practices
+    url: https://www.anthropic.com/engineering/claude-code-best-practices
+    type: html
+    snapshot: upstream/docs/anthropic/claude-code-best-practices.html
+    note: "Canonical 'best practices' page for Claude Code workflows."
+
+  - id: anthropic-skills-readme
+    url: https://raw.githubusercontent.com/anthropics/skills/main/README.md
+    type: raw
+    snapshot: upstream/docs/anthropic/skills-README.md
+    note: "Official anthropics/skills repository overview."
+
+  - id: anthropic-harness-design
+    url: https://www.anthropic.com/engineering/harness-design-long-running-apps
+    type: html
+    snapshot: upstream/docs/anthropic/harness-design.html
+    note: "GAN-style harness architecture (Planner/Generator/Evaluator)."
+
+  # ── OpenAI / Codex ──────────────────────────────────────────────────
+  - id: openai-codex-agents-md-guide
+    url: https://developers.openai.com/codex/guides/agents-md
+    type: html
+    snapshot: upstream/docs/openai/agents-md-guide.html
+    note: "AGENTS.md spec and conventions for Codex CLI."
+
+  - id: openai-codex-repo-agents-md
+    url: https://raw.githubusercontent.com/openai/codex/main/AGENTS.md
+    type: raw
+    snapshot: upstream/docs/openai/codex-repo-AGENTS.md
+    note: "AGENTS.md from the Codex CLI repo itself (reference example)."
+
+  - id: openai-codex-cli-docs
+    url: https://developers.openai.com/codex/cli
+    type: html
+    snapshot: upstream/docs/openai/codex-cli.html
+
+  # ── Google / Gemini ─────────────────────────────────────────────────
+  - id: gemini-cli-readme
+    url: https://raw.githubusercontent.com/google-gemini/gemini-cli/main/README.md
+    type: raw
+    snapshot: upstream/docs/google/gemini-cli-README.md
+
+  - id: gemini-system-instructions
+    url: https://ai.google.dev/gemini-api/docs/system-instructions
+    type: html
+    snapshot: upstream/docs/google/system-instructions.html
+
+  # ── MCP ─────────────────────────────────────────────────────────────
+  - id: mcp-spec
+    url: https://modelcontextprotocol.io/specification
+    type: html
+    snapshot: upstream/docs/mcp/specification.html
+    note: "Model Context Protocol specification."
+
+  # ── Superpowers / agentic frameworks ────────────────────────────────
+  - id: superpowers-readme
+    url: https://raw.githubusercontent.com/obra/superpowers/main/README.md
+    type: raw
+    snapshot: upstream/docs/superpowers/README.md
+
+  - id: spec-kit-readme
+    url: https://raw.githubusercontent.com/github/spec-kit/main/README.md
+    type: raw
+    snapshot: upstream/docs/spec-kit/README.md
+
+  # ── Plugin sources we don't carry verbatim, but want to track ──────
+  - id: ecc-readme
+    url: https://raw.githubusercontent.com/affaan-m/everything-claude-code/main/README.md
+    type: raw
+    snapshot: upstream/ecc/README.md
+    note: "Everything Claude Code overview — track for plugin-bootstrap accuracy."
+
+  - id: claude-mem-readme
+    url: https://raw.githubusercontent.com/thedotmack/claude-mem/main/README.md
+    type: raw
+    snapshot: upstream/claude-mem/README.md
+
+  - id: memsearch-readme
+    url: https://raw.githubusercontent.com/zilliztech/memsearch/main/README.md
+    type: raw
+    snapshot: upstream/memsearch/README.md

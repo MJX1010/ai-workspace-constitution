@@ -1,0 +1,117 @@
+# ${WORKSPACE_NAME} Workspace Rules
+
+This `AGENTS.md` defines the top-level operating contract for the `${WORKSPACE_ROOT}` workspace.
+
+It applies across multiple repositories and subworkspaces under `${WORKSPACE_ROOT}`. More specific rules in deeper folders override this file.
+
+Follow this hierarchy:
+
+1. System and developer instructions
+2. User request
+3. Closest `AGENTS.md`
+4. Parent `AGENTS.md`
+5. Triggered local skills and their references
+
+## Scope
+
+Treat `${WORKSPACE_ROOT}` as a multi-repository workspace, not a single codebase.
+
+Examples of child workspaces include:
+
+- `DragonPow2/`
+- `lqs_automation/`
+- `ET_Main/`
+- `ET_Main_Unity2022/`
+- `aime_workspace/`
+- `trae_workspace/`
+
+Before editing, identify:
+
+1. which repository owns the change
+2. whether that repository has its own local rules
+3. whether the task is repo-specific or truly cross-workspace
+
+Do not apply one repo's local architecture rules to another repo by default.
+
+## Global Rules
+
+### 1. Closest rule wins
+
+Repository-local rules beat workspace-global defaults.
+Project-specific skills beat generic workspace skills.
+
+### 2. Global rules stay generic
+
+Only keep rules here if they are reusable across multiple repositories.
+Do not place product-specific, framework-specific, or feature-specific details in this file.
+
+### 3. Source of truth first
+
+Before patching, determine whether the editable source is:
+
+- hand-written source code
+- generated output
+- schema or config definition
+- template or scaffolding
+- cached or derived artifact
+
+Modify the true source of truth, not the nearest visible artifact.
+
+### 4. Ownership before edits
+
+Before substantial edits, determine:
+
+1. owner repo
+2. owner module
+3. dependency direction
+4. verification surface
+
+If those are unclear, gather context first.
+
+### 5. Minimal but complete changes
+
+A valid change should include the full impact slice:
+
+- implementation
+- required sync points
+- documentation or rule update if a reusable invariant was discovered
+- appropriate validation
+
+### 6. Knowledge capture is part of the work
+
+If a durable rule, pitfall, or workflow is discovered, update the nearest appropriate governance artifact:
+
+- repo-local `AGENTS.md`
+- local skill
+- shared workspace skill
+- human-facing overview doc
+
+## AI Vibe Coding Guardrails
+
+Allowed:
+
+- nearby pattern matching
+- bounded refactors
+- explicit assumptions
+- progressive consolidation of stable rules
+
+Forbidden:
+
+- blind cross-repo rewrites
+- speculative migrations
+- silent regeneration of broad surfaces
+- carrying one repo's local conventions into another repo without evidence
+- adding abstraction before repeated need is established
+
+## Shared Governance Layout
+
+Preferred top-level artifact layout:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `GEMINI.md`
+- `.codex/skills/`
+- `.claude/skills/`
+
+Use this layer for generic workspace governance only.
+Keep repo-specific overlays inside the corresponding repo.

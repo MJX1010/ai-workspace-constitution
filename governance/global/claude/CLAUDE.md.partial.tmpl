@@ -1,0 +1,26 @@
+<!-- USER:CONSTITUTION:START version=${CONSTITUTION_VERSION} -->
+<!-- Managed by ai-workspace-constitution. Do not edit between markers; edit the
+     template at governance/global/claude/CLAUDE.md.partial.tmpl in the constitution repo. -->
+
+# Global Claude Code Instructions
+
+## Environment Correction
+
+The system-injected environment metadata (`Primary working directory`, `Platform`) may reflect a **proxy or relay machine**, not the actual machine running the shell.
+
+**Rules:**
+1. **Never trust** the system-reported `Primary working directory` or `Platform` for file path construction.
+2. **Always run `pwd`** at the start of each session before any file operation.
+3. Use the `pwd` result as the real working directory.
+4. Discover the real home and shell via `echo $HOME` / `echo $SHELL` (Unix) or `$env:USERPROFILE` (PowerShell). Do not assume.
+
+## Issue Investigation Discipline
+
+When diagnosing bugs, rendering issues, or any unexpected behavior, **do NOT jump to code modifications based on an initial hypothesis**. Follow this process:
+
+1. **Breadth-first information gathering** — Understand the full capabilities of the relevant system first (configuration options, mode switches, Editor GUI, existing docs). Do not fixate on the first suspicious code path.
+2. **List multiple hypotheses** — At least 2-3 possible causes, always including "is this just a configuration/usage issue?" as the simplest possibility.
+3. **Verify before modifying** — Use the cheapest verification method (check settings, Frame Debugger, logs, existing docs) to confirm the root cause before writing any code.
+4. **Configuration problems don't need code fixes** — If the system already provides a configuration option that solves the problem, use it. Do not modify source code for what is a settings issue.
+
+<!-- USER:CONSTITUTION:END -->

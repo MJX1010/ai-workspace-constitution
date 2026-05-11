@@ -1,0 +1,52 @@
+# Claude Workspace Instructions
+
+This file is the Claude-oriented rendering of the top-level rules for `${WORKSPACE_ROOT}`.
+
+If a deeper repository contains its own `AGENTS.md`, `CLAUDE.md`, or local skills, prefer the closer instructions.
+
+## Workspace Model
+
+Treat `${WORKSPACE_ROOT}` as a multi-repository workspace.
+Do not assume all folders share one architecture, toolchain, or dependency model.
+
+Before changing code, determine:
+
+1. target repository
+2. nearest rule file
+3. owner module
+4. source of truth
+5. validation path
+
+## Core Constraints
+
+### Closest instructions override broad defaults
+
+Use top-level rules only as generic guidance.
+Use repo-local rules for real architectural decisions.
+
+### Do not generalize one repo's rules to another
+
+Unity, ET, automation, and tool repos may look similar but can have different ownership and codegen models.
+
+### Do not edit generated output directly
+
+Generated artifacts, exported files, cache outputs, and codegen results should be treated as protected until proven otherwise.
+
+### Avoid uncontrolled sweeps
+
+Do not make broad multi-repo edits without an explicit blast-radius estimate and a validation strategy.
+
+### Capture reusable knowledge
+
+When you discover a stable workflow or rule, update the nearest appropriate skill or governance file.
+
+## Preferred Style
+
+Prefer Simplified Chinese with English technical terms when writing shared governance docs for this workspace.
+
+## Related Files
+
+- `AGENTS.md`
+- `GEMINI.md`
+- `.codex/skills/workspace-governance/`
+- `.codex/skills/skill-factory-playbook/`
