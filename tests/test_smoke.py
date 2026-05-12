@@ -50,6 +50,13 @@ class TestInstallSmoke(unittest.TestCase):
         self.assertTrue((self.target / "GEMINI.md").exists())
         self.assertTrue((self.target / "README_AI_GOVERNANCE.md").exists())
         self.assertTrue((self.target / ".codex" / "config.toml").exists())
+        self.assertTrue((self.target / ".codex" / "AGENTS.md").exists())
+        self.assertTrue(
+            (self.target / ".codex" / "scripts" / "manage-superpowers.ps1").exists()
+        )
+        self.assertTrue(
+            (self.target / ".codex" / "scripts" / "manage-superpowers.bat").exists()
+        )
         self.assertTrue(
             (self.target / ".codex" / "skills" / "workspace-governance" / "SKILL.md").exists()
         )
@@ -57,6 +64,9 @@ class TestInstallSmoke(unittest.TestCase):
             (self.target / ".claude" / "skills" / "skill-factory-playbook" / "SKILL.md").exists()
         )
         self.assertTrue((self.target / ".constitution-state.json").exists())
+        codex_agents = (self.target / ".codex" / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("USER:CONSTITUTION:START", codex_agents)
+        self.assertIn("Superpowers Activation Policy", codex_agents)
 
     def test_workspace_root_substituted(self):
         run_module("install", "--yes", env=self._env())
@@ -107,6 +117,22 @@ class TestInstallSmoke(unittest.TestCase):
         # Inject content BEFORE the start marker — outside our managed section.
         global_claude.write_text(
             "## SOMETHING ELSE NOT OURS\n\nfake content\n\n" + original,
+            encoding="utf-8",
+        )
+
+        r = run_module("verify", "--fail-on-drift", env=self._env())
+        self.assertEqual(r.returncode, 0, msg=r.stdout + r.stderr)
+        self.assertIn("PASSED", r.stdout)
+
+    def test_codex_marker_section_isolation(self):
+        """Local blocks outside the Codex marker section are not constitution drift."""
+        run_module("install", "--yes", env=self._env())
+        global_codex = self.target / ".codex" / "AGENTS.md"
+        original = global_codex.read_text(encoding="utf-8")
+
+        global_codex.write_text(
+            "<!-- BEGIN MANAGED SUPERPOWERS -->\nlocal state\n"
+            "<!-- END MANAGED SUPERPOWERS -->\n\n" + original,
             encoding="utf-8",
         )
 

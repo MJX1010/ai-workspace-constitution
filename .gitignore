@@ -47,3 +47,24 @@ tests/output/
 *.key
 *.pem
 secrets.*
+
+# AI harness runtime state and private machine files. These may appear during
+# installer testing or accidental local copies; keep only templates in git.
+auth.json
+.credentials.json
+cap_sid
+history.jsonl
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+sessions/
+cache/
+log/
+logs/
+telemetry/
+file-history/
+paste-cache/
+shell-snapshots/
+.sandbox/
+.sandbox-bin/
+.sandbox-secrets/

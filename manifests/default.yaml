@@ -71,6 +71,17 @@ components:
     target_dir: "${WORKSPACE_ROOT}/.codex/skills"
     mode: replace
 
+  workspace_scripts_codex:
+    enabled: true
+    description: "Codex workspace helper scripts authored by this constitution"
+    os: [windows]
+    harness: [codex]
+    sources:
+      - governance/workspace-scripts/codex/manage-superpowers.bat
+      - governance/workspace-scripts/codex/manage-superpowers.ps1
+    target_dir: "${WORKSPACE_ROOT}/.codex/scripts"
+    mode: replace
+
   # ── Per-harness configs ────────────────────────────────────────────
   workspace_config_codex:
     enabled: true
@@ -97,6 +108,19 @@ components:
     sources:
       - governance/global/claude/CLAUDE.md.partial.tmpl
     target: "${HOME}/.claude/CLAUDE.md"
+    mode: marker-section
+    section_marker_start: "<!-- USER:CONSTITUTION:START"
+    section_marker_end: "<!-- USER:CONSTITUTION:END -->"
+
+  # Global user-section in ~/.codex/AGENTS.md.
+  # Inserted between <!-- USER:CONSTITUTION:START --> and <!-- USER:CONSTITUTION:END -->.
+  # Plugin-managed or locally generated superpowers blocks are NOT touched.
+  global_codex_user_section:
+    enabled: true
+    description: "User-authored Codex home rules and superpowers activation policy"
+    sources:
+      - governance/global/codex/AGENTS.md.partial.tmpl
+    target: "${HOME}/.codex/AGENTS.md"
     mode: marker-section
     section_marker_start: "<!-- USER:CONSTITUTION:START"
     section_marker_end: "<!-- USER:CONSTITUTION:END -->"

@@ -126,3 +126,4 @@ __ai_law/
 - Migration to a new machine: see [`docs/migration.md`](./docs/migration.md)
 - Plugin bootstrap (ECC / OMC / etc.): see [`docs/plugin-bootstrap.md`](./docs/plugin-bootstrap.md)
 - Update policy (when and how to absorb upstream changes): see [`docs/update-policy.md`](./docs/update-policy.md)
+- Sync scope (what is versioned vs ignored): see [`docs/sync-scope.md`](./docs/sync-scope.md)

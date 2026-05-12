@@ -48,7 +48,10 @@ maintained by other tools is referenced but not duplicated:
 | `~/.claude/rules/*` (ECC plugin tree) | **Not copied.** Same reason. |
 | OMC block in `~/.claude/CLAUDE.md` | **Not touched.** OMC's plugin manages it between `<!-- OMC:START -->` and `<!-- OMC:END -->`. |
 | User-authored sections of `~/.claude/CLAUDE.md` | Templated under `governance/global/claude/CLAUDE.md.partial.tmpl`, inserted via marker section into the live file. |
+| User-authored sections of `~/.codex/AGENTS.md` | Templated under `governance/global/codex/AGENTS.md.partial.tmpl`, inserted via marker section into the live file. |
 | superpowers, claude-mem, memsearch | **Not copied.** Their plugins are installed by the user; only the *whitelist* skill (Windows + Codex) is part of governance. |
+
+For the full include/exclude list, see `docs/sync-scope.md`.
 
 ADR-0003 expands this rule.
 

@@ -129,6 +129,12 @@ powershell -ExecutionPolicy Bypass -File ${WORKSPACE_ROOT}\.codex\scripts\manage
 (The skill `manage-superpowers-whitelist` lives at
 `governance/workspace-skills/codex-only/`.)
 
+The script is authored by this constitution at
+`governance/workspace-scripts/codex/manage-superpowers.ps1` and is installed
+into the workspace. It updates only the local superpowers junctions and the
+managed superpowers block in `~/.codex/AGENTS.md`; it does not vendor the
+upstream `superpowers` plugin content.
+
 ## Verification
 
 After all layers are in place, run:

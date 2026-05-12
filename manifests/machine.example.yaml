@@ -14,9 +14,15 @@ components:
   # Disable Windows-only skill on macOS / Linux.
   workspace_skill_codex_superpowers_manager:
     enabled: false
+  workspace_scripts_codex:
+    enabled: false
 
   # Example: skip Claude config on a machine that only uses Codex.
   # workspace_config_claude:
   #   enabled: false
   # workspace_skills_claude:
+  #   enabled: false
+  # global_claude_user_section:
+  #   enabled: false
+  # global_codex_user_section:
   #   enabled: false

@@ -1,0 +1,39 @@
+<!-- USER:CONSTITUTION:START version=${CONSTITUTION_VERSION} -->
+<!-- Managed by ai-workspace-constitution. Do not edit between markers; edit the
+     template at governance/global/codex/AGENTS.md.partial.tmpl in the constitution repo. -->
+
+# Personal Codex Rules
+
+This section applies to the home-level Codex environment.
+
+## Superpowers Whitelist
+
+Only the following superpowers skills are enabled by the recommended baseline:
+
+- `brainstorming`
+- `dispatching-parallel-agents`
+- `finishing-a-development-branch`
+- `receiving-code-review`
+- `requesting-code-review`
+- `subagent-driven-development`
+- `systematic-debugging`
+- `test-driven-development`
+- `verification-before-completion`
+- `writing-plans`
+- `writing-skills`
+
+Do not use any other skill from the installed `superpowers` library unless the user explicitly changes this whitelist.
+
+## Superpowers Activation Policy
+
+Keep superpowers as an available workflow library, not as a global mandatory startup routine.
+
+- Do not load `using-superpowers` at session startup.
+- Do not invoke a superpowers skill solely because a new conversation started or because the user sent a greeting.
+- Invoke enabled superpowers only when the user explicitly names one or the current task matches the skill purpose.
+- Treat `verification-before-completion` as the only always-on completion guard before claiming code work is done.
+- Treat `systematic-debugging` as task-triggered for bugs, failing tests, errors, and unexpected behavior.
+- Treat `receiving-code-review` as task-triggered when the user provides review feedback.
+- Treat planning, TDD, review, subagent, branch-finishing, and skill-writing superpowers as task-triggered workflows.
+
+<!-- USER:CONSTITUTION:END -->
