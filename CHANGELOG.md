@@ -20,10 +20,11 @@ Entries are grouped under these section headings (in order):
 ### Added
 - `governance/global/codex/AGENTS.md.partial.tmpl` for the user-authored Codex home-level marker section and superpowers activation policy.
 - `governance/workspace-scripts/codex/manage-superpowers.ps1` and `.bat` so the Windows Codex superpowers whitelist manager is versioned and installed from the constitution.
+- `governance/workspace-skills/shared/github-sync-commit/` for credential-safe GitHub commit/push workflows, mirrored into both Codex and Claude workspace skills.
 - `docs/sync-scope.md` documenting synced paths, materialised targets, and deliberately ignored local/plugin/runtime surfaces.
 
 ### Changed
-- `manifests/default.yaml` now installs the Codex global marker section and Codex helper scripts.
+- `manifests/default.yaml` now installs the Codex global marker section, Codex helper scripts, and the shared `github-sync-commit` skill.
 - `.gitignore` now excludes common AI harness runtime state if it is accidentally copied into the constitution repo.
 
 ## [0.2.0] - 2026-05-11

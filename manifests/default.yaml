@@ -41,22 +41,24 @@ components:
   # ── Workspace skills (Codex mirror) ────────────────────────────────
   workspace_skills_codex:
     enabled: true
-    description: "Codex-side mirror of workspace-governance + skill-factory-playbook + feature-spec-workflow skills"
+    description: "Codex-side mirror of shared workspace skills"
     sources:
       - governance/workspace-skills/shared/workspace-governance/
       - governance/workspace-skills/shared/skill-factory-playbook/
       - governance/workspace-skills/shared/feature-spec-workflow/
+      - governance/workspace-skills/shared/github-sync-commit/
     target_dir: "${WORKSPACE_ROOT}/.codex/skills"
     mode: replace
 
   # ── Workspace skills (Claude mirror) ───────────────────────────────
   workspace_skills_claude:
     enabled: true
-    description: "Claude-side mirror of workspace-governance + skill-factory-playbook + feature-spec-workflow skills"
+    description: "Claude-side mirror of shared workspace skills"
     sources:
       - governance/workspace-skills/shared/workspace-governance/
       - governance/workspace-skills/shared/skill-factory-playbook/
       - governance/workspace-skills/shared/feature-spec-workflow/
+      - governance/workspace-skills/shared/github-sync-commit/
     target_dir: "${WORKSPACE_ROOT}/.claude/skills"
     mode: replace
 

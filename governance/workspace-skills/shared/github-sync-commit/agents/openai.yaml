@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Sync Commit"
+  short_description: "Safely commit and push repo changes to GitHub."
+  default_prompt: "Use $github-sync-commit to commit the current repo changes and push them to GitHub without exposing secrets."

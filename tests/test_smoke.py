@@ -61,7 +61,13 @@ class TestInstallSmoke(unittest.TestCase):
             (self.target / ".codex" / "skills" / "workspace-governance" / "SKILL.md").exists()
         )
         self.assertTrue(
+            (self.target / ".codex" / "skills" / "github-sync-commit" / "SKILL.md").exists()
+        )
+        self.assertTrue(
             (self.target / ".claude" / "skills" / "skill-factory-playbook" / "SKILL.md").exists()
+        )
+        self.assertTrue(
+            (self.target / ".claude" / "skills" / "github-sync-commit" / "SKILL.md").exists()
         )
         self.assertTrue((self.target / ".constitution-state.json").exists())
         codex_agents = (self.target / ".codex" / "AGENTS.md").read_text(encoding="utf-8")
