@@ -38,7 +38,7 @@ uloop run-tests --project-path client/Unity --test-mode PlayMode --filter-type a
 ```
 
 - 若 uLoop 提示 Unity Editor 未启动或 CLI Loop server 不可用，先按共享 Unity 编译验证规则执行 `uloop fix`、重试，再用 `uloop launch client/Unity` 启动 Unity Editor 后重跑测试。
-- 若测试被未保存的场景/Prefab 阻断，且用户已授权继续验证，可追加 `--save-before-run true` 保存当前未保存内容后重跑，例如：
+- 若测试被未保存的场景/Prefab 阻断，或 Unity 报 `Assets/Scenes/Init.unity` 等场景存在未保存改动并导致测试数为 0，必须按共享 uLoop 规则保存后继续：追加 `--save-before-run true` 重跑同一条测试命令，并报告阻断路径与重跑后的测试结果；除非用户明确要求丢弃改动，不得通过 revert / checkout 场景来绕过验证。例如：
 
 ```powershell
 uloop run-tests --project-path client/Unity --test-mode PlayMode --filter-type assembly --filter-value Unity.Tests --save-before-run true

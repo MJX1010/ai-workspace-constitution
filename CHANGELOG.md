@@ -25,6 +25,7 @@ Entries are grouped under these section headings (in order):
 - `docs/sync-scope.md` documenting synced paths, materialised targets, and deliberately ignored local/plugin/runtime surfaces.
 
 ### Changed
+- DragonPow2 uLoop rules now treat unsaved scene/Prefab test blockers as save-and-rerun cases by default, including `Assets/Scenes/Init.unity` causing `Unity.Tests` to report 0 tests.
 - DragonPow2 client uLoop rules now require `Unity.Tests` coverage and full `Unity.Tests` runs by default for non-trivial iterative client feature work.
 - `manifests/default.yaml` now installs the DragonPow2 overlay to `${DRAGONPOW2_ROOT}`, defaulting to `${WORKSPACE_ROOT}/DragonPow2`.
 - `manifests/default.yaml` now installs the Codex global marker section, Codex helper scripts, and the shared `github-sync-commit` skill.

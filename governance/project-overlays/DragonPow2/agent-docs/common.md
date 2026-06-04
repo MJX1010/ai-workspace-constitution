@@ -43,7 +43,8 @@ uloop compile --project-path client/Unity --wait-for-domain-reload true
 
 - 必须读取并报告 uLoop 返回的编译错误。若有错误，修复后重新运行，直到没有编译错误。
 - 若 uLoop 无法连接（提示 Unity Editor 未打开或 CLI Loop server 未运行）：先用 `uloop fix` 清理 stale lock 后重试；仍失败时用 `uloop launch client/Unity` 启动该项目的 Unity Editor，待加载完成后重新运行原 uLoop 命令。
-- 若 uLoop 编译、测试或运行命令被未保存的场景/Prefab 阻断，且用户已授权继续验证，可在原命令追加 `--save-before-run true` 保存当前未保存内容后重跑；若用户未授权保存，必须先询问。
+- 若 uLoop 编译、测试或运行命令被未保存的场景/Prefab 阻断，默认应保存未保存改动后继续验证：在原命令追加 `--save-before-run true` 重跑。若用户已明确要求继续验证、只处理该场景/Prefab、重跑测试或保存后继续，视为已授权保存；除非用户明确要求丢弃改动，不得默认 revert / checkout 场景或 Prefab。
+- 若用户未授权保存且语义不明确，必须先询问；测试命令因未保存场景/Prefab 被阻断且测试数为 0 时，不得视为测试通过，必须按保存后重跑或等待用户决策处理。
 - 若 Unity 启动或连接最终仍失败，保底使用 `dotnet build` 进行编译验证，并在最终说明中写明已降级为 dotnet、降级原因及 uLoop 不可用的事实。
 - 正常情况下 `dotnet build` 仅作额外检查，不能替代 uLoop 的 Editor 编译状态。
 
