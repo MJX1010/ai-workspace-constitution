@@ -44,6 +44,7 @@ maintained by other tools is referenced but not duplicated:
 |---|---|
 | Workspace `AGENTS.md`, `CLAUDE.md`, `GEMINI.md` | Templated under `governance/workspace/`, written verbatim on install. |
 | Workspace skills `workspace-governance`, `skill-factory-playbook` | Templated under `governance/workspace-skills/shared/`, mirrored to both `.codex/skills/` and `.claude/skills/`. |
+| Repo-owned overlays such as DragonPow2 agent docs | Templated under `governance/project-overlays/<repo>/`, written only to that repo's configured root. |
 | `~/.claude/AGENTS.md` (ECC plugin file) | **Not copied.** ECC's installer recreates it. See `docs/plugin-bootstrap.md`. |
 | `~/.claude/rules/*` (ECC plugin tree) | **Not copied.** Same reason. |
 | OMC block in `~/.claude/CLAUDE.md` | **Not touched.** OMC's plugin manages it between `<!-- OMC:START -->` and `<!-- OMC:END -->`. |
@@ -61,6 +62,7 @@ Pure `${VAR}` substitution, multi-pass to handle nested references.
 
 - `${WORKSPACE_ROOT}` — required, set per machine.
 - `${WORKSPACE_NAME}` — auto-derived from `WORKSPACE_ROOT`'s basename.
+- `${DRAGONPOW2_ROOT}` — defaults to `${WORKSPACE_ROOT}/DragonPow2`, override in `manifests/machine.local.yaml` if needed.
 - `${HOME}` / `${USERPROFILE}` — auto-detected.
 - `${USER}` — from environment.
 - `${CONSTITUTION_VERSION}` — read from `VERSION`.

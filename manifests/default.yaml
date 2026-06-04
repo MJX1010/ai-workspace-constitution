@@ -23,6 +23,9 @@ paths:
   workspace_root: "${WORKSPACE_ROOT}"
   # Auto-detected from $HOME (Unix) or $env:USERPROFILE (Windows) at install time.
   user_home: "${HOME}"
+  # Repo-owned overlay for the DragonPow2 multi-project workspace.
+  # Override this in manifests/machine.local.yaml if the repo is not under WORKSPACE_ROOT.
+  dragonpow2_root: "${WORKSPACE_ROOT}/DragonPow2"
 
 components:
 
@@ -36,6 +39,34 @@ components:
       - governance/workspace/GEMINI.md.tmpl
       - governance/workspace/README_AI_GOVERNANCE.md.tmpl
     target_dir: "${WORKSPACE_ROOT}"
+    mode: replace
+
+  # ── DragonPow2 repo-owned overlay ──────────────────────────────────
+  # These are intentionally project-specific and materialise inside DragonPow2,
+  # not in the generic workspace governance layer.
+  dragonpow2_root_agent_docs:
+    enabled: true
+    description: "DragonPow2 root AGENTS.md / CLAUDE.md overlay"
+    sources:
+      - governance/project-overlays/DragonPow2/root/AGENTS.md.tmpl
+      - governance/project-overlays/DragonPow2/root/CLAUDE.md.tmpl
+    target_dir: "${DRAGONPOW2_ROOT}"
+    mode: replace
+
+  dragonpow2_agent_doc_templates:
+    enabled: true
+    description: "DragonPow2 agent-doc template source"
+    sources:
+      - governance/project-overlays/DragonPow2/agent-docs/
+    target_dir: "${DRAGONPOW2_ROOT}/governance"
+    mode: replace
+
+  dragonpow2_agent_doc_scripts:
+    enabled: true
+    description: "DragonPow2 agent-doc sync/check scripts"
+    sources:
+      - governance/project-overlays/DragonPow2/scripts/
+    target_dir: "${DRAGONPOW2_ROOT}"
     mode: replace
 
   # ── Workspace skills (Codex mirror) ────────────────────────────────

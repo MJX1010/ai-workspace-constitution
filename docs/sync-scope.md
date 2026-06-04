@@ -17,6 +17,7 @@ These are user-authored, reusable, and safe to version:
 - `governance/workspace-skills/codex-only/manage-superpowers-whitelist/**`
 - `governance/workspace-scripts/codex/manage-superpowers.ps1`
 - `governance/workspace-scripts/codex/manage-superpowers.bat`
+- `governance/project-overlays/DragonPow2/**`
 - `governance/global/claude/CLAUDE.md.partial.tmpl`
 - `governance/global/codex/AGENTS.md.partial.tmpl`
 - `manifests/default.yaml`
@@ -40,6 +41,11 @@ The installer writes the synced sources to these target paths:
 - `${WORKSPACE_ROOT}/.claude/skills/**`
 - `${WORKSPACE_ROOT}/.codex/scripts/manage-superpowers.ps1`
 - `${WORKSPACE_ROOT}/.codex/scripts/manage-superpowers.bat`
+- `${DRAGONPOW2_ROOT}/AGENTS.md`
+- `${DRAGONPOW2_ROOT}/CLAUDE.md`
+- `${DRAGONPOW2_ROOT}/governance/agent-docs/**`
+- `${DRAGONPOW2_ROOT}/scripts/sync-agent-docs.ps1`
+- `${DRAGONPOW2_ROOT}/scripts/check-agent-docs.ps1`
 - `${HOME}/.claude/CLAUDE.md` between `<!-- USER:CONSTITUTION:START -->` and `<!-- USER:CONSTITUTION:END -->`
 - `${HOME}/.codex/AGENTS.md` between `<!-- USER:CONSTITUTION:START -->` and `<!-- USER:CONSTITUTION:END -->`
 
@@ -66,12 +72,14 @@ repo-owned overlays:
 - `${HOME}/.claude/.omc/**`
 - `${HOME}/.codex/superpowers/**`
 - `${HOME}/.agents/skills/superpowers/**`
-- repository-local `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.codex/**`, and `.claude/**` under child repos
+- repository-local `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.codex/**`, and `.claude/**` under child repos, unless a specific repo overlay is explicitly declared under `governance/project-overlays/`
 - any `machine.local.yaml`, `.env*`, `*.key`, `*.pem`, backup, cache, or generated state file
 
 ## Decision Rule
 
 Sync only user-authored templates, scripts, skills, manifests, and documents
 that are stable across machines. Keep secrets, logs, sessions, caches,
-plugin-managed content, generated files, and child-repo overlays out of this
-repo.
+plugin-managed content, generated files, and undeclared child-repo overlays out
+of this repo. If a child repo needs Git-backed AI governance, add a named
+`governance/project-overlays/<repo>/` source so the project-specific boundary is
+visible in review.

@@ -84,6 +84,23 @@ class TestInstallSmoke(unittest.TestCase):
         self.assertNotIn("${WORKSPACE_ROOT}", text)
         self.assertNotIn("${WORKSPACE_NAME}", text)
 
+    def test_cli_workspace_root_feeds_derived_paths(self):
+        env = {
+            "WORKSPACE_ROOT": "",
+            "HOME": str(self.target),
+            "USERPROFILE": str(self.target),
+        }
+        r = run_module(
+            "install",
+            "--workspace-root",
+            str(self.target),
+            "--dry-run",
+            "--verbose",
+            env=env,
+        )
+        self.assertEqual(r.returncode, 0, msg=r.stdout + r.stderr)
+        self.assertIn(str(self.target / "DragonPow2" / "AGENTS.md"), r.stdout)
+
     def test_idempotent_reinstall(self):
         r1 = run_module("install", "--yes", env=self._env())
         self.assertEqual(r1.returncode, 0)

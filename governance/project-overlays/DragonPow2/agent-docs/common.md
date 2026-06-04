@@ -1,0 +1,67 @@
+## 语言与文档
+
+- 首要使用中文与用户沟通；除非用户明确要求英文，最终回复、阶段性说明、设计分析和 review 结论都使用中文。
+- 新增或修改文档、代码注释、XML summary、README、架构说明时，优先使用中文描述。保留 API 名称、类型名、路径、命令和协议字段原文。
+- 面向团队沉淀的设计规范、迁移规则和边界说明必须写清楚中文上下文，避免只留下英文占位描述。
+- 在回复、阶段说明、文件清单和 review 结论中引用文件或目录时，必须展示完整绝对路径（例如 `D:\Projects\DragonPow2\DragonPow2_Trunk_Leaning\client\Unity\Assets\Scripts\Hotfix\Client\ClientMode\Game\Meta\Prop\Protocol\PropFormalProtocol.cs`），不要用省略号缩写中间层级，也不要只给相对片段，便于直接定位和点击打开。
+
+## 跨目录协作上下文发现
+
+- 当从 `D:\Projects\DragonPow2` 顶层目录对 `D:\Projects\DragonPow2\DragonPow2_Trunk_Leaning`、`D:\Projects\DragonPow2\DragonPow2_Trunk_Leaning\client` 等子目录项目开展 AI agent 对话协作时，必须按“顶层目录 -> 项目根目录 -> 子模块目录 -> 目标文件所在目录”的顺序逐层查找上下文。
+- 每一层优先检查 `AGENTS.md`、`CLAUDE.md`、`.agents\skills\`、`.codex\skills\`、`.agents\docs\`、`docs\`、`reference\`、`references\`、`README.md` 等；任务涉及特定模块时，继续向下检查该模块附近的同类说明、脚本和模板。
+- 发现可用 skill 时，先读取对应 `SKILL.md` 的触发条件和工作流；若 skill 引用 `docs`、`reference`、模板或脚本，按相对路径从该 skill 所在目录解析，只加载与当前任务直接相关的资料。
+- 子目录局部规则用于补充或收窄上层规则；如出现冲突，以更靠近目标项目或目标文件的说明为准，但不得违反 DragonPow2 顶层共享的语言、安全、协议边界和验证规则。
+- 阶段性说明或最终回复中应简要说明已采用的关键层级、skill 或 docs/reference；若某层不存在相关资料，记录后继续向下查找，不要因为顶层已有规则就跳过子项目局部说明。
+
+## 编码设计原则
+
+- 编码应遵循设计模式和面向对象设计原则，优先保证单一职责、依赖倒置、接口隔离和开放封闭。
+- 当同一调用点需要切换多种实现时，优先使用接口配合 strategy、adapter、factory、registry 等模式，不在业务调用方直接分支依赖具体实现。
+- 抽象必须服务于真实变化点，避免为了“看起来规范”引入无实际收益的过度设计。
+- 业务规则、存档权威、协议投影、UI 展示等职责需要清晰分层，禁止把多个层级的副作用塞进同一个通用方法。
+
+## 协议与 Mock 边界
+
+- Adapter 只能依赖接口或抽象选择器，不直接依赖 mock/formal 具体实现类型。
+- mock 与正式协议通过接口、registry 或 factory 切换；具体实现类型只能出现在 registry/factory 这类组合根中，不能出现在 Adapter、ComponentSystem、通用网络层或业务调用方。
+- mock 宏和 mock 协议字段依赖必须收敛在 mock 实现文件或 NetworkMock 模块内；关闭 mock 编译宏时，不应编译 mock 实现类，也不应存在创建 mock 实现对象的代码路径。
+- mock 关闭时不得走客户端本地权威写入兜底；正式协议缺失时返回明确的 `NotSupported`，由调用方决定提示、降级读取缓存或阻断流程。
+- 通用网络调用层不得塞入具体业务投影逻辑；Meta/Prop 等缓存投影应放在对应协议投影器或模块适配层。
+- 业务写入入口必须按具体模块拆分，例如 `JobProtocolAdapter`、`SkillProtocolAdapter`、`TaskProtocolAdapter`；禁止新增大而全的 `MetaBusinessProtocolAdapter` 或类似业务总线。
+- `MetaDataProtocolAdapter` 只保留 Meta 加载/清理，不承载具体玩法写入；具体玩法写入必须走具体业务协议。
+- 命名必须表达真实角色：接口使用能力名，具体实现使用 `Formal`/`Mock` 等实现名，只有纯辅助方法集合才使用 `Helper`/`Support`，避免把协议实现误命名成辅助类。
+- 完成此类改动前必须做设计边界检查：调用方是否只依赖抽象、组合根是否唯一持有具体实现、mock 关闭时是否完全走正式路径、缺失正式协议是否显式失败。
+
+## Unity 编译验证
+
+- 修改 Unity C# 代码、生成代码、asmdef 引用或可能影响编译的 Unity 资源后，完成前必须检查 Unity 编译错误。
+- 从当前项目根目录运行：
+
+```powershell
+uloop compile --project-path client/Unity --wait-for-domain-reload true
+```
+
+- 必须读取并报告 uLoop 返回的编译错误。若有错误，修复后重新运行，直到没有编译错误。
+- 若 uLoop 无法连接（提示 Unity Editor 未打开或 CLI Loop server 未运行）：先用 `uloop fix` 清理 stale lock 后重试；仍失败时用 `uloop launch client/Unity` 启动该项目的 Unity Editor，待加载完成后重新运行原 uLoop 命令。
+- 若 uLoop 编译、测试或运行命令被未保存的场景/Prefab 阻断，且用户已授权继续验证，可在原命令追加 `--save-before-run true` 保存当前未保存内容后重跑；若用户未授权保存，必须先询问。
+- 若 Unity 启动或连接最终仍失败，保底使用 `dotnet build` 进行编译验证，并在最终说明中写明已降级为 dotnet、降级原因及 uLoop 不可用的事实。
+- 正常情况下 `dotnet build` 仅作额外检查，不能替代 uLoop 的 Editor 编译状态。
+
+## 本地 Review Gate（cr_local）
+
+- 完成代码改动后，若该工作副本 `client` 下存在 `Tools/codereview/cr_local.ps1`，必须在通过 Unity 编译验证后再跑一次本地 review gate，作为完成前的强制门禁。
+- 从 client 工作副本根目录运行（脚本自动识别 SVN/Git diff，用 `-Path` 收窄到本次改动文件）：
+
+```powershell
+.\Tools\codereview\cr_local.ps1 -Path @('Unity\Assets\Scripts\...\Changed.cs')
+```
+
+- 见到 `LOCAL_REVIEW_PACKET: READY` 后，在当前对话内 review 该 diff，并一并检查直接 caller / callee / references，按 RED / YELLOW / GREEN 分类。
+- RED 必须修复后才算完成；YELLOW 按风险判断，未修需说明原因；不发送飞书通知，不归档报告。
+
+## Agent 文档统一管理
+
+- 多项目共享规范以 `D:\Projects\DragonPow2\governance\agent-docs\` 为唯一模板源。
+- 修改 `AGENTS.md` / `CLAUDE.md` 的共享规则时，先改模板，再运行 `D:\Projects\DragonPow2\scripts\sync-agent-docs.ps1` 同步。
+- 提交或备份前运行 `D:\Projects\DragonPow2\scripts\check-agent-docs.ps1` 检查各项目托管块是否漂移。
+- 脚本只管理 `<!-- BEGIN DRAGONPOW2 ... -->` 到 `<!-- END DRAGONPOW2 ... -->` 之间的内容；项目本地补充必须写在托管块之外。

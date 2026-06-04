@@ -9,6 +9,8 @@
 paths:
   # Absolute path on THIS machine. The installer also accepts WORKSPACE_ROOT env var.
   workspace_root: "/Users/me/projects/agents"
+  # Override when DragonPow2 is not located at ${WORKSPACE_ROOT}/DragonPow2.
+  dragonpow2_root: "/Users/me/projects/agents/DragonPow2"
 
 components:
   # Disable Windows-only skill on macOS / Linux.

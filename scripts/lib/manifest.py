@@ -49,13 +49,20 @@ def build_vars(
 ) -> Dict[str, str]:
     """Build the variable dict for ${VAR} substitution.
 
-    Resolution order: env vars -> manifest paths -> CLI overrides.
+    CLI overrides are applied before resolving manifest paths so derived paths
+    such as ${WORKSPACE_ROOT}/DragonPow2 see the CLI value. They are applied
+    again after manifest paths so explicit CLI values still have final priority.
     Adds CONSTITUTION_VERSION from manifest.
     """
     vars = env_vars()
     vars["CONSTITUTION_VERSION"] = str(
         manifest.get("constitution", {}).get("version", "0.0.0")
     )
+    if cli_overrides:
+        for k, v in cli_overrides.items():
+            vars[k] = str(v)
+            vars[k.upper()] = str(v)
+
     # Resolve manifest paths (these may reference env vars)
     paths = manifest.get("paths", {}) or {}
     for k, v in paths.items():

@@ -52,6 +52,7 @@ __ai_law/
 │   ├── workspace/             # → $WORKSPACE_ROOT/{AGENTS,CLAUDE,GEMINI,README_AI_GOVERNANCE}.md
 │   ├── workspace-skills/      # → $WORKSPACE_ROOT/.{codex,claude}/skills/
 │   ├── workspace-config/      # → $WORKSPACE_ROOT/.{codex/config.toml, claude/settings.local.json}
+│   ├── project-overlays/      # → explicit repo-owned overlays such as DragonPow2
 │   └── global/                # → ~/.claude/, ~/.codex/, etc. (only user-authored sections)
 ├── upstream/                  # READ-ONLY snapshots
 │   ├── sources.yaml           # what to watch (Anthropic / OpenAI / Google / MCP / ECC / OMC / …)
