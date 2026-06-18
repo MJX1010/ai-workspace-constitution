@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "lark-doc": {
+      "source": "larksuite/cli",
+      "sourceType": "github",
+      "computedHash": "c791462a04ef77d14d1148a51e29dacc01e074472432210de8c521144f4ffd5a"
+    },
+    "lark-shared": {
+      "source": "larksuite/cli",
+      "sourceType": "github",
+      "computedHash": "43725933d9664803905a58eba33f420650c49240499171d63b1c7b0a55b0fdf2"
+    }
+  }
+}

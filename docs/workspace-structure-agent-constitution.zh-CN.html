@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>D:\Projects 项目结构与 Agent 宪法方案</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --paper: #ffffff;
+      --ink: #17202a;
+      --muted: #5f6b7a;
+      --line: #d9dee7;
+      --soft: #eef2f6;
+      --accent: #0f766e;
+      --accent-2: #8a4b0f;
+      --danger: #a32929;
+      --code: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+    .page {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 28px 22px;
+      border-right: 1px solid var(--line);
+      background: #fbfcfd;
+    }
+    nav h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+    nav a {
+      display: block;
+      padding: 7px 0;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    main {
+      max-width: 1160px;
+      padding: 40px 48px 72px;
+    }
+    header {
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--line);
+      margin-bottom: 28px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+    }
+    h2 {
+      margin: 34px 0 12px;
+      padding-top: 6px;
+      font-size: 24px;
+      line-height: 1.25;
+      border-top: 1px solid var(--line);
+    }
+    h3 {
+      margin: 24px 0 8px;
+      font-size: 18px;
+    }
+    p {
+      margin: 10px 0;
+    }
+    ul, ol {
+      padding-left: 22px;
+    }
+    li {
+      margin: 5px 0;
+    }
+    code {
+      font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+      color: var(--code);
+      background: var(--soft);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    pre {
+      overflow: auto;
+      padding: 16px;
+      border-radius: 6px;
+      background: #101827;
+      color: #e5edf7;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+    pre code {
+      padding: 0;
+      background: transparent;
+      color: inherit;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: #eef3f7;
+      font-weight: 700;
+    }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: #eef8f6;
+      padding: 12px 16px;
+      margin: 16px 0;
+    }
+    .warn {
+      border-left-color: var(--danger);
+      background: #fff1f1;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .box h3 {
+      margin-top: 0;
+    }
+    @media (max-width: 900px) {
+      .page {
+        display: block;
+      }
+      nav {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      main {
+        padding: 28px 22px 48px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav>
+      <h2>目录</h2>
+      <a href="#summary">总体结论</a>
+      <a href="#layout">推荐目录分层</a>
+      <a href="#truth">Source of Truth</a>
+      <a href="#constitution">Agent 规格宪法</a>
+      <a href="#repo">constitution 结构</a>
+      <a href="#domains">重点目录策略</a>
+      <a href="#migration">迁移与清理</a>
+      <a href="#checklist">审查清单</a>
+      <a href="#decision">推荐决策</a>
+    </nav>
+    <main>
+      <header>
+        <h1>D:\Projects 项目结构与 Agent 宪法方案</h1>
+        <p class="subtitle">适用范围：D:\Projects、ai-workspace-constitution、ai_projects、DragonPow2、DragonPow1 及其子目录。</p>
+      </header>
+
+      <section id="summary">
+        <h2>1. 总体结论</h2>
+        <div class="callout">
+          <p><code>D:\Projects</code> 应按“工作区本地层 + 可版本化宪法层 + 领域根 + 实际仓库 + 产物缓存层”管理，而不是在每个 Trunk、Branch、工具仓库里重复放一份个人 <code>AGENTS.md</code> / <code>CLAUDE.md</code>。</p>
+        </div>
+        <ul>
+          <li><code>D:\Projects\AGENTS.md</code> / <code>CLAUDE.md</code> 是个人工作区入口，可以进入个人治理 Git 仓库管理；默认不提交到业务/产品仓库。</li>
+          <li><code>D:\Projects\ai-workspace-constitution</code> 是可版本化的规则模板、安装器、文档和技能 source of truth。</li>
+          <li><code>DragonPow2</code>、<code>DragonPow1</code>、<code>ai_projects</code> 是领域根，可以放本机个人域级规则，但不应向每个子仓库复制。</li>
+          <li>子仓库里只有团队共享、项目公有、明确要版本化的 Agent 规则才保留。</li>
+          <li>Agent 读取上下文时按路径自上而下发现规则，提交时必须反向审查是否误带本地治理文件。</li>
+        </ul>
+      </section>
+
+      <section id="layout">
+        <h2>2. 推荐目录分层</h2>
+        <pre><code>D:\Projects\
+  AGENTS.md                         # 本机工作区级规则
+  CLAUDE.md                         # 本机 Claude 工作区入口
+  GEMINI.md                         # 可选，本机 Gemini 工作区入口
+  .agents\                          # 本机共享 skills / agent 资源
+  .codex\                           # Codex 本机配置、skills、脚本、缓存
+  .claude\                          # Claude 本机配置、skills、设置
+  .constitution-state.json           # constitution 安装状态
+
+  ai-workspace-constitution\         # 可版本化宪法仓库
+  ai_projects\                       # AI 工具/研究/插件/训练项目领域根
+  DragonPow2\                        # DragonPow2 多工作副本领域根
+  DragonPow1\                        # DragonPow1 历史/维护工作副本领域根
+  lqs_automation\                    # 自动化构建/发布仓库
+  specs\                             # 跨仓库活跃功能规格与任务状态
+
+  _outputs\                          # 输出物、报告、临时交付
+  _research\                         # 调研资料、一次性采样
+  _codex_tmp\ / _tmp_*\              # 临时工作区
+  __Android\ / __Unity\ / __GitRepo\ # 平台 SDK、镜像、归档类资源</code></pre>
+        <table>
+          <thead>
+            <tr>
+              <th>类型</th>
+              <th>示例</th>
+              <th>是否应进产品仓库</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>工作区本地层</td>
+              <td><code>D:\Projects\AGENTS.md</code>、<code>.codex\</code>、<code>.claude\</code></td>
+              <td>否</td>
+              <td>个人环境、工具配置、默认行为规则。</td>
+            </tr>
+            <tr>
+              <td>宪法 source of truth</td>
+              <td><code>ai-workspace-constitution\governance\</code>、<code>manifests\</code>、<code>docs\</code></td>
+              <td>进 constitution 仓库</td>
+              <td>可复用模板、安装器、策略文档。</td>
+            </tr>
+            <tr>
+              <td>领域根</td>
+              <td><code>DragonPow2\</code>、<code>DragonPow1\</code>、<code>ai_projects\</code></td>
+              <td>通常否</td>
+              <td>本机组织层，用来聚合多个 repo / working copy。</td>
+            </tr>
+            <tr>
+              <td>实际仓库</td>
+              <td><code>DragonPow2_Trunk\</code>、<code>lqs_automation\build_dragon2\</code>、<code>ai_projects\paseo\</code></td>
+              <td>视仓库而定</td>
+              <td>业务代码或工具代码的真实版本控制边界。</td>
+            </tr>
+            <tr>
+              <td>临时/产物层</td>
+              <td><code>_outputs\</code>、<code>_research\</code>、Unity <code>Library\</code></td>
+              <td>否</td>
+              <td>可再生成、一次性或机器状态。</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="truth">
+        <h2>3. Source of Truth 分层</h2>
+        <div class="grid">
+          <article class="box">
+            <h3>个人规则</h3>
+            <p>只应该存在于工作区根、领域根，或 constitution 中对应模板。它们描述个人协作偏好、本机路径、工具约束、提交授权规则。</p>
+            <p>可以由 constitution 生成到本机，也可以在个人治理 Git 仓库中版本化，但不应该被提交到业务/产品 SVN/Git。</p>
+          </article>
+          <article class="box">
+            <h3>团队共享规则</h3>
+            <p>可以存在于实际仓库中，但必须对所有使用者成立，不依赖个人路径，并且仓库 owner 接受它作为版本化文件。</p>
+          </article>
+          <article class="box">
+            <h3>constitution 仓库</h3>
+            <p>保存可版本化模板、脚本、skills、manifest、docs、ADR，提供跨机器迁移、验证、漂移检测能力。</p>
+          </article>
+          <article class="box">
+            <h3>非目标</h3>
+            <p>不存储密钥、会话、缓存、构建产物，不替代产品仓库 README / CI / 业务规范，不批量写入每个子仓库。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="constitution">
+        <h2>4. Agent 规格宪法</h2>
+        <h3>4.1 规则优先级</h3>
+        <ol>
+          <li>system / developer / 当前用户要求</li>
+          <li>当前会话中用户的最新指令</li>
+          <li>最近目录的 <code>AGENTS.md</code> / <code>CLAUDE.md</code></li>
+          <li>父级目录的 <code>AGENTS.md</code> / <code>CLAUDE.md</code></li>
+          <li>被当前任务触发的 skills / docs / specs</li>
+          <li>默认模型行为</li>
+        </ol>
+        <div class="callout warn">
+          <p>提交、上传、发布、删除、回退类操作有额外门禁：即使下级文件允许，也不能覆盖上级个人安全规则和当前用户授权要求。</p>
+        </div>
+        <h3>4.2 上下文发现算法</h3>
+        <pre><code>1. 确认 cwd、实际目标路径、VCS 类型。
+2. 从 D:\Projects 开始读取工作区级规则。
+3. 进入领域根，例如 DragonPow2 / DragonPow1 / ai_projects，读取域级规则。
+4. 进入实际仓库，读取仓库公开规则、README、docs、specs。
+5. 进入模块目录，读取最近的局部规则和 source of truth。
+6. 识别当前任务的验证路径、构建平台、提交边界。
+7. 修改前列出将触碰的文件类型：源码、模板、生成物、缓存、治理文件。</code></pre>
+        <h3>4.3 Agent 规则文件规格</h3>
+        <pre><code># &lt;范围&gt; Agent 规则
+
+## 适用范围
+说明本文件覆盖哪个目录树，是否是个人本地文件，是否允许提交。
+
+## Source of Truth
+说明真正应修改的源码、模板、manifest、生成流程在哪里。
+
+## 操作门禁
+说明禁止操作、需要用户确认的操作、编码和提交规则。
+
+## 验证方式
+说明本目录最小可行的 test / build / review gate。
+
+## 子目录覆盖
+列出哪些子目录有更近规则，或者说明子目录默认继承。</code></pre>
+        <h3>4.4 版本控制规则</h3>
+        <p>默认禁止提交到业务/产品仓库：个人 <code>AGENTS.md</code> / <code>CLAUDE.md</code>、本机工具状态、<code>machine.local.yaml</code>、密钥、日志、缓存、Unity <code>Library\</code>、临时产物。</p>
+        <p>允许提交个人治理仓库中的 <code>AGENTS.md</code> / <code>CLAUDE.md</code> 模板、快照或 overlay；也允许提交 constitution 模板、manifest、安装脚本、验证脚本、docs、ADR，以及实际产品仓库中团队明确共享的项目规则。</p>
+      </section>
+
+      <section id="repo">
+        <h2>5. constitution 推荐结构</h2>
+        <pre><code>ai-workspace-constitution\
+  governance\
+    workspace\                         # D:\Projects 顶层通用规则
+    global\                            # 用户 HOME 级 Claude/Codex marker section
+    domain-overlays\                   # 领域根本机规则，目标不是产品仓库
+      DragonPow2\
+      DragonPow1\
+      ai_projects\
+    project-overlays\                  # 明确团队共享、可进入实际 repo 的项目规则
+      &lt;repo-name&gt;\
+    workspace-skills\
+    workspace-config\
+    workspace-scripts\
+  manifests\
+    default.yaml
+    machine.example.yaml
+    machine.local.yaml                 # gitignored，本机路径覆盖
+  docs\
+    workspace-structure-agent-constitution.zh-CN.md
+    workspace-structure-agent-constitution.zh-CN.html</code></pre>
+        <p>短期可以不立刻重命名现有 <code>project-overlays/DragonPow2</code>，但语义上建议拆开：写到 <code>D:\Projects\DragonPow2\AGENTS.md</code> / <code>CLAUDE.md</code> 的内容属于 domain overlay；写到实际 SVN/Git 仓库里的内容才属于 project overlay。</p>
+      </section>
+
+      <section id="domains">
+        <h2>6. 重点目录落地策略</h2>
+        <h3>D:\Projects</h3>
+        <p>作为个人工作区根，保留顶层 <code>AGENTS.md</code> / <code>CLAUDE.md</code>、本机工具目录和 <code>specs\</code>。不要把具体项目细节写进顶层规则。</p>
+        <h3>ai-workspace-constitution</h3>
+        <p>所有通用规则先写模板，再由 installer 渲染到本机。manifest 明确列出每个目标路径，不做递归写入所有子目录。</p>
+        <h3>ai_projects</h3>
+        <p>作为 AI 工具、插件、训练、研究项目集合。域级入口放在 <code>D:\Projects\ai_projects</code>，每个真实 Git 项目保留自己的最小项目规则。</p>
+        <h3>DragonPow2</h3>
+        <p>作为 DragonPow2 多 working copy 和配套工具领域根。域级规则统一描述 Unity、SVN、Jenkins、补丁、构建、中文提交日志等门禁；子工作副本不再复制个人规则。</p>
+        <h3>DragonPow1</h3>
+        <p>作为历史项目和维护分支集合。默认继承 <code>D:\Projects</code>，只有频繁维护时才新增域级入口，不要默认套用 DragonPow2 的构建规则。</p>
+      </section>
+
+      <section id="migration">
+        <h2>7. 迁移与清理步骤</h2>
+        <pre><code>1. 盘点现有 AGENTS.md / CLAUDE.md 分布。
+2. 标注每个文件：个人本地、域级本地、团队共享、第三方示例、无效重复。
+3. 个人本地规则上移到 D:\Projects 或领域根。
+4. 团队共享规则保留在实际仓库，但删掉本机路径和个人偏好。
+5. constitution 中把 workspace、domain overlay、project overlay 分开。
+6. manifest 只写明确目标，不做递归写入所有子目录。
+7. 提交前用 VCS 状态确认没有误提交个人治理文件。</code></pre>
+        <pre><code>rg --files -g AGENTS.md -g CLAUDE.md D:\Projects</code></pre>
+      </section>
+
+      <section id="checklist">
+        <h2>8. 审查清单</h2>
+        <ul>
+          <li>这个规则是个人规则、团队规则，还是一次性任务说明？</li>
+          <li>它应该放在工作区、领域根、实际仓库，还是 specs？</li>
+          <li>它是否依赖本机路径、账号、Jenkins 地址、FTP 地址？</li>
+          <li>它是否会被另一个使用者错误继承？</li>
+          <li>它是否需要进入 SVN/Git？如果需要，是否已有明确授权？</li>
+          <li>是否包含缓存、产物、临时文件、密钥？</li>
+          <li>中文日志是否使用 UTF-8 且提交后可读？</li>
+          <li>当前任务是否修改了实际 source of truth，而不是派生产物？</li>
+        </ul>
+      </section>
+
+      <section id="decision">
+        <h2>9. 推荐决策</h2>
+        <ol>
+          <li><code>D:\Projects</code> 保存个人工作区入口，作为所有 agent 的默认上下文。</li>
+          <li><code>ai-workspace-constitution</code> 保存可版本化模板和安装逻辑。</li>
+          <li><code>DragonPow2</code>、<code>DragonPow1</code>、<code>ai_projects</code> 作为领域根，必要时放本机域级入口。</li>
+          <li>不再在每个 Trunk、Branch、工具仓库里复制个人 <code>AGENTS.md</code> / <code>CLAUDE.md</code>。</li>
+          <li><code>project-overlays</code> 只用于实际仓库里团队共享的规则；本机域级规则应拆到 <code>domain-overlays</code> 或保持当前 overlay 但明确其本机语义。</li>
+          <li>所有提交、上传、发布默认需要单独确认；<code>AGENTS.md</code> / <code>CLAUDE.md</code> 可以进个人治理仓库，但默认不提交到业务/产品仓库。</li>
+        </ol>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

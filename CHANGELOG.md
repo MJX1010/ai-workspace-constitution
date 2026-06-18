@@ -22,13 +22,21 @@ Entries are grouped under these section headings (in order):
 - `governance/global/codex/AGENTS.md.partial.tmpl` for the user-authored Codex home-level marker section and superpowers activation policy.
 - `governance/workspace-scripts/codex/manage-superpowers.ps1` and `.bat` so the Windows Codex superpowers whitelist manager is versioned and installed from the constitution.
 - `governance/workspace-skills/shared/github-sync-commit/` for credential-safe GitHub commit/push workflows, mirrored into both Codex and Claude workspace skills.
+- `governance/workspace-skills/shared/browser-doc-crawler/` for exporting logged-in browser documentation pages to local HTML/Markdown artifacts.
+- `governance/workspace-skills/shared/karpathy-guidelines/` for lightweight coding/review/refactor behavior guardrails.
+- `governance/workspace-config/claude-env/` for Claude plugin/settings recovery notes and scripts.
+- `manifests/skills-lock.json` to pin external workspace skill sources and hashes.
 - `docs/sync-scope.md` documenting synced paths, materialised targets, and deliberately ignored local/plugin/runtime surfaces.
+- Chinese workspace structure and Agent Git-management inventory documents under `docs/`.
 
 ### Changed
+- DragonPow2 skill authoring rules now require Chinese `SKILL.md` trigger descriptions and relative or placeholder paths instead of machine-local absolute project paths.
+- DragonPow2 agent rules now require final responses after code/resource/config/doc changes to include a copyable suggested commit log for manual submission.
 - DragonPow2 uLoop rules now treat unsaved scene/Prefab test blockers as save-and-rerun cases by default, including `Assets/Scenes/Init.unity` causing `Unity.Tests` to report 0 tests.
 - DragonPow2 client uLoop rules now require `Unity.Tests` coverage and full `Unity.Tests` runs by default for non-trivial iterative client feature work.
 - `manifests/default.yaml` now installs the DragonPow2 overlay to `${DRAGONPOW2_ROOT}`, defaulting to `${WORKSPACE_ROOT}/DragonPow2`.
 - `manifests/default.yaml` now installs the Codex global marker section, Codex helper scripts, and the shared `github-sync-commit` skill.
+- `manifests/default.yaml` now mirrors shared workspace skills into `.agents/skills` as well as Codex and Claude skill directories.
 - `.gitignore` now excludes common AI harness runtime state if it is accidentally copied into the constitution repo.
 
 ## [0.2.0] - 2026-05-11

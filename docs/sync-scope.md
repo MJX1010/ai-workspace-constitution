@@ -13,6 +13,7 @@ These are user-authored, reusable, and safe to version:
 - `governance/workspace/README_AI_GOVERNANCE.md.tmpl`
 - `governance/workspace-config/codex.config.toml.tmpl`
 - `governance/workspace-config/claude.settings.local.json.tmpl`
+- `governance/workspace-config/claude-env/**`
 - `governance/workspace-skills/shared/**`
 - `governance/workspace-skills/codex-only/manage-superpowers-whitelist/**`
 - `governance/workspace-scripts/codex/manage-superpowers.ps1`
@@ -22,6 +23,7 @@ These are user-authored, reusable, and safe to version:
 - `governance/global/codex/AGENTS.md.partial.tmpl`
 - `manifests/default.yaml`
 - `manifests/machine.example.yaml`
+- `manifests/skills-lock.json`
 - `scripts/install.*`, `scripts/update.*`, `scripts/verify.*`, and `scripts/lib/**`
 - `docs/architecture.md`, `docs/plugin-bootstrap.md`, `docs/update-policy.md`, `docs/migration.md`, `docs/sync-scope.md`, and ADRs
 - `upstream/sources.yaml` and read-only upstream snapshots used for drift review
@@ -39,8 +41,11 @@ The installer writes the synced sources to these target paths:
 - `${WORKSPACE_ROOT}/.claude/settings.local.json`
 - `${WORKSPACE_ROOT}/.codex/skills/**`
 - `${WORKSPACE_ROOT}/.claude/skills/**`
+- `${WORKSPACE_ROOT}/.agents/skills/**`
 - `${WORKSPACE_ROOT}/.codex/scripts/manage-superpowers.ps1`
 - `${WORKSPACE_ROOT}/.codex/scripts/manage-superpowers.bat`
+- `${WORKSPACE_ROOT}/.claude/env/**`
+- `${WORKSPACE_ROOT}/skills-lock.json`
 - `${DRAGONPOW2_ROOT}/AGENTS.md`
 - `${DRAGONPOW2_ROOT}/CLAUDE.md`
 - `${DRAGONPOW2_ROOT}/governance/agent-docs/**`

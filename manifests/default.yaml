@@ -78,6 +78,8 @@ components:
       - governance/workspace-skills/shared/skill-factory-playbook/
       - governance/workspace-skills/shared/feature-spec-workflow/
       - governance/workspace-skills/shared/github-sync-commit/
+      - governance/workspace-skills/shared/browser-doc-crawler/
+      - governance/workspace-skills/shared/karpathy-guidelines/
     target_dir: "${WORKSPACE_ROOT}/.codex/skills"
     mode: replace
 
@@ -90,7 +92,23 @@ components:
       - governance/workspace-skills/shared/skill-factory-playbook/
       - governance/workspace-skills/shared/feature-spec-workflow/
       - governance/workspace-skills/shared/github-sync-commit/
+      - governance/workspace-skills/shared/browser-doc-crawler/
+      - governance/workspace-skills/shared/karpathy-guidelines/
     target_dir: "${WORKSPACE_ROOT}/.claude/skills"
+    mode: replace
+
+  # ── Workspace skills (.agents mirror) ──────────────────────────────
+  workspace_skills_agents:
+    enabled: true
+    description: "Harness-neutral mirror of shared workspace skills"
+    sources:
+      - governance/workspace-skills/shared/workspace-governance/
+      - governance/workspace-skills/shared/skill-factory-playbook/
+      - governance/workspace-skills/shared/feature-spec-workflow/
+      - governance/workspace-skills/shared/github-sync-commit/
+      - governance/workspace-skills/shared/browser-doc-crawler/
+      - governance/workspace-skills/shared/karpathy-guidelines/
+    target_dir: "${WORKSPACE_ROOT}/.agents/skills"
     mode: replace
 
   # ── Codex-only / Windows-only skill ────────────────────────────────
@@ -130,6 +148,25 @@ components:
     sources:
       - governance/workspace-config/claude.settings.local.json.tmpl
     target: "${WORKSPACE_ROOT}/.claude/settings.local.json"
+    mode: replace
+
+  workspace_config_claude_env:
+    enabled: true
+    description: "Claude Code plugin and settings recovery notes"
+    sources:
+      - governance/workspace-config/claude-env/README.md
+      - governance/workspace-config/claude-env/plugins-inventory.md
+      - governance/workspace-config/claude-env/settings-reference.json
+      - governance/workspace-config/claude-env/restore-settings.sh
+    target_dir: "${WORKSPACE_ROOT}/.claude/env"
+    mode: replace
+
+  workspace_skills_lock:
+    enabled: true
+    description: "Pinned external workspace skill sources"
+    sources:
+      - manifests/skills-lock.json
+    target: "${WORKSPACE_ROOT}/skills-lock.json"
     mode: replace
 
   # ── Global user-section in ~/.claude/CLAUDE.md ────────────────────

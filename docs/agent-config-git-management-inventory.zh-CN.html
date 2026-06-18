@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>D:\Projects Agent 配置与文档 Git 管理清单</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --paper: #ffffff;
+      --ink: #17202a;
+      --muted: #5c6675;
+      --line: #d8dee8;
+      --soft: #eef3f8;
+      --accent: #0b6b62;
+      --warn: #9b3d21;
+      --danger: #9b2525;
+      --code: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 28px 22px;
+      background: #fbfcfe;
+      border-right: 1px solid var(--line);
+    }
+    nav h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+    nav a {
+      display: block;
+      padding: 7px 0;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    nav a:hover { color: var(--accent); }
+    main {
+      max-width: 1180px;
+      padding: 42px 50px 72px;
+    }
+    header {
+      margin-bottom: 28px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--line);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+    }
+    h2 {
+      margin: 34px 0 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      font-size: 24px;
+      line-height: 1.28;
+    }
+    h3 {
+      margin: 24px 0 8px;
+      font-size: 18px;
+    }
+    p { margin: 10px 0; }
+    ul, ol { padding-left: 22px; }
+    li { margin: 5px 0; }
+    code {
+      font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+      color: var(--code);
+      background: var(--soft);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+    pre {
+      overflow: auto;
+      padding: 16px;
+      border-radius: 6px;
+      background: #101827;
+      color: #e8eef7;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: #eef3f7;
+      font-weight: 700;
+    }
+    .callout {
+      margin: 16px 0;
+      padding: 12px 16px;
+      border-left: 4px solid var(--accent);
+      background: #edf8f6;
+    }
+    .warn {
+      border-left-color: var(--warn);
+      background: #fff5ed;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .box h3 { margin-top: 0; }
+    @media (max-width: 960px) {
+      .layout { display: block; }
+      nav {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      main { padding: 28px 22px 48px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <h2>目录</h2>
+      <a href="#principles">管理原则</a>
+      <a href="#already">已适合 Git 管理</a>
+      <a href="#live">Live 文件处理</a>
+      <a href="#candidates">本次迁入内容</a>
+      <a href="#forbidden">不应 Git 管理</a>
+      <a href="#locations">推荐落点</a>
+      <a href="#migration">迁移顺序</a>
+      <a href="#decision">最终建议</a>
+    </nav>
+    <main>
+      <header>
+        <h1>D:\Projects Agent 配置与文档 Git 管理清单</h1>
+        <p class="subtitle">盘点范围：D:\Projects 顶层 Agent 入口、.agents、.codex、.claude、ai-workspace-constitution 中的治理源。</p>
+      </header>
+
+      <section id="principles">
+        <h2>1. 管理原则</h2>
+        <div class="callout">
+          <p>可版本化的 source of truth 应进入 <code>D:\Projects\ai-workspace-constitution</code> Git 仓库；<code>D:\Projects</code> 下已经渲染出来的 live 配置可以被个人治理仓库管理，但默认不作为业务/产品仓库提交物。</p>
+        </div>
+        <div class="grid">
+          <article class="box">
+            <h3>可直接 Git 管理</h3>
+            <p>用户自写、可复用、无密钥、跨机器稳定的模板、脚本、docs、manifest、skills 源。</p>
+          </article>
+          <article class="box">
+            <h3>间接 Git 管理</h3>
+            <p>当前文件是 installer 渲染目标、软链接目标或机器本地配置，只提交模板或 manifest。</p>
+          </article>
+          <article class="box">
+            <h3>禁止 Git 管理</h3>
+            <p>密钥、会话、缓存、状态、备份、插件安装产物、生成物。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="already">
+        <h2>2. 当前已适合放入 Git 的内容</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>constitution 路径</th>
+              <th>管理内容</th>
+              <th>目标</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>governance/workspace/*.tmpl</code></td><td>工作区入口规则模板</td><td><code>D:\Projects\AGENTS.md</code> 等 live 文件</td></tr>
+            <tr><td><code>governance/global/*</code></td><td>HOME 级 marker section</td><td><code>~\.claude</code> / <code>~\.codex</code> 局部区域</td></tr>
+            <tr><td><code>governance/workspace-config/*.tmpl</code></td><td>Codex / Claude 配置模板</td><td><code>.codex\config.toml</code>、<code>.claude\settings.local.json</code></td></tr>
+            <tr><td><code>governance/workspace-skills/shared/*</code></td><td>共享 workspace skills 源</td><td><code>.agents</code> / <code>.codex</code> / <code>.claude</code> 镜像</td></tr>
+            <tr><td><code>governance/workspace-skills/codex-only/*</code></td><td>Codex 专用 skills</td><td><code>.codex\skills</code></td></tr>
+            <tr><td><code>governance/workspace-scripts/codex/*</code></td><td>Codex helper 脚本源</td><td><code>.codex\scripts</code></td></tr>
+            <tr><td><code>governance/project-overlays/DragonPow2/*</code></td><td>DragonPow2 overlay 源</td><td><code>D:\Projects\DragonPow2</code> 相关目标</td></tr>
+            <tr><td><code>manifests/default.yaml</code></td><td>默认安装清单</td><td>installer source of truth</td></tr>
+            <tr><td><code>scripts/</code>、<code>tests/</code>、<code>docs/</code></td><td>工具链、验证和治理文档</td><td>constitution 自身</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="live">
+        <h2>3. 当前 live 文件的处理方式</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>live 路径</th>
+              <th>推荐处理</th>
+              <th>原因</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>D:\Projects\AGENTS.md</code></td><td>推荐提交模板；需要精确追踪 live 时可放 constitution 快照</td><td>渲染目标，可能含本机路径和临时规则</td></tr>
+            <tr><td><code>D:\Projects\CLAUDE.md</code></td><td>推荐提交模板；需要精确追踪 live 时可放 constitution 快照</td><td>渲染目标</td></tr>
+            <tr><td><code>D:\Projects\GEMINI.md</code></td><td>推荐提交模板；需要精确追踪 live 时可放 constitution 快照</td><td>渲染目标</td></tr>
+            <tr><td><code>D:\Projects\.codex\config.toml</code></td><td>不直接提交；提交 <code>codex.config.toml.tmpl</code></td><td>本机 live 配置</td></tr>
+            <tr><td><code>D:\Projects\.claude\settings.local.json</code></td><td>不直接提交；提交模板</td><td>可能随工具变化</td></tr>
+            <tr><td><code>.codex/.claude/.agents skills</code></td><td>按来源处理</td><td>混合了镜像、外部安装、用户自写内容</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="candidates">
+        <h2>4. 本次已迁入 constitution 管理的内容</h2>
+        <p>这些内容原本在 <code>D:\Projects</code> live 目录下，本次已迁入 constitution 的稳定 source of truth，并通过 <code>manifests/default.yaml</code> 进入安装清单。</p>
+        <h3>skills-lock.json</h3>
+        <p>已迁到 <code>manifests\skills-lock.json</code>，只记录 <code>lark-doc</code>、<code>lark-shared</code> 的来源和 hash，没有真实密钥，并通过 <code>workspace_skills_lock</code> 安装回 live 根目录。</p>
+
+        <h3>.agents\skills\browser-doc-crawler</h3>
+        <p>已迁入 <code>governance\workspace-skills\shared\browser-doc-crawler\</code>，并改用 <code>${WORKSPACE_ROOT}</code> 写法，避免固定本机路径。manifest 会同步到 <code>.agents</code> / <code>.codex</code> / <code>.claude</code>。</p>
+
+        <h3>.agents\skills\karpathy-guidelines</h3>
+        <p>已迁入 <code>governance\workspace-skills\shared\karpathy-guidelines\</code>。<code>SKILL.md</code> 保留 <code>license: MIT</code> 和来源链接；后续若要更严格追踪上游，可再补 upstream 快照。</p>
+
+        <h3>.claude\env</h3>
+        <p>已迁入 <code>governance\workspace-config\claude-env\</code>，并通过 <code>workspace_config_claude_env</code> 逐文件安装回 <code>D:\Projects\.claude\env\</code>。其中 <code>root:&lt;password&gt;</code> 是占位符，不是真实密钥。</p>
+
+        <h3>后续候选：领域根 overlay</h3>
+        <pre><code>governance\domain-overlays\
+  DragonPow2\
+  DragonPow1\
+  ai_projects\</code></pre>
+        <p>domain overlay 管理本机领域入口，project overlay 才管理实际仓库公共规则。</p>
+      </section>
+
+      <section id="forbidden">
+        <h2>5. 不建议或禁止 Git 管理的内容</h2>
+        <ul>
+          <li><code>D:\Projects\.constitution-state.json</code>：installer 状态文件。</li>
+          <li><code>*.backup.*</code>：安装器或手工备份产物。</li>
+          <li>live 的 <code>.codex\config.toml</code>、<code>.claude\settings.local.json</code>：提交模板，不提交渲染结果。</li>
+          <li><code>.claude\skills\lark-doc</code>、<code>lark-shared</code> junction：提交 lock，不提交链接结果。</li>
+          <li>插件缓存、session、history、log、auth、credentials。</li>
+          <li><code>.memsearch\</code>、<code>.omc\</code>、<code>.hermes\</code> 等运行状态目录。</li>
+          <li><code>_codex_tmp\</code>、<code>_outputs\</code>、<code>_research\</code> 中的一次性产物。</li>
+        </ul>
+      </section>
+
+      <section id="locations">
+        <h2>6. 推荐 Git 管理落点</h2>
+        <p>所有可管理内容统一放进 <code>D:\Projects\ai-workspace-constitution</code>。不要新建多个散落的 Git 仓库分别管理 <code>.codex</code>、<code>.claude</code>、<code>.agents</code>。</p>
+        <table>
+          <thead><tr><th>内容</th><th>推荐 constitution 路径</th></tr></thead>
+          <tbody>
+            <tr><td>工作区入口规则</td><td><code>governance\workspace\*.tmpl</code></td></tr>
+            <tr><td>Codex / Claude 配置模板</td><td><code>governance\workspace-config\</code></td></tr>
+            <tr><td>Claude 插件恢复资料</td><td><code>governance\workspace-config\claude-env\</code> 或 <code>docs\claude-environment-recovery\</code></td></tr>
+            <tr><td>共享 skills</td><td><code>governance\workspace-skills\shared\</code></td></tr>
+            <tr><td>外部 skill 锁定</td><td><code>manifests\skills-lock.json</code></td></tr>
+            <tr><td>领域根规则</td><td><code>governance\domain-overlays\&lt;domain&gt;\</code></td></tr>
+            <tr><td>实际仓库公共规则</td><td><code>governance\project-overlays\&lt;repo&gt;\</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="migration">
+        <h2>7. 后续建议迁移顺序</h2>
+        <p>已完成 <code>skills-lock.json</code>、<code>.claude\env</code>、<code>browser-doc-crawler</code>、<code>karpathy-guidelines</code> 的迁入。</p>
+        <pre><code>1. 先提交 constitution 里已有模板、docs、scripts、tests。
+2. 新建 domain-overlays，拆分 DragonPow2 等领域根本机规则。
+3. 若需要更严格追踪外部来源，为 karpathy-guidelines 补 upstream 快照或来源 hash。
+4. 删除或忽略 live 目录中的备份文件，避免误提交。</code></pre>
+      </section>
+
+      <section id="decision">
+        <h2>8. 最终建议</h2>
+        <ol>
+          <li><code>ai-workspace-constitution</code> 继续作为唯一 Git 管理仓库。</li>
+          <li><code>D:\Projects</code> 下 live 的 <code>AGENTS.md</code> / <code>CLAUDE.md</code> 可以进个人治理 Git，但推荐以 constitution 模板为主；<code>.codex</code> / <code>.claude</code> live 配置仍以模板和 manifest 管理。</li>
+          <li><code>skills-lock.json</code>、<code>.claude\env</code>、<code>browser-doc-crawler</code>、<code>karpathy-guidelines</code> 已迁入 constitution 管理。</li>
+          <li><code>lark-doc</code> / <code>lark-shared</code> 优先通过 lock 管理；除非需要固定离线快照，否则不 vendor。</li>
+          <li><code>DragonPow2</code> 这类领域根应走 <code>domain-overlays</code>，不要把个人域级规则混入产品仓库提交。</li>
+        </ol>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

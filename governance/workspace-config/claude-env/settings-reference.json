@@ -1,0 +1,25 @@
+{
+  "_comment": "settings.json 完整参考配置 — CC switch 后需要恢复的非 env 字段",
+  "_note": "env 和 model 字段由 CC switch 管理，此处不记录",
+
+  "enabledPlugins": {
+    "claude-mem@thedotmack": true,
+    "memsearch@memsearch-plugins": true,
+    "superpowers@claude-plugins-official": true
+  },
+
+  "extraKnownMarketplaces": {
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "memsearch-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "zilliztech/memsearch"
+      }
+    }
+  }
+}

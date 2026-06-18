@@ -1,0 +1,4 @@
+interface:
+  display_name: "Browser Doc Crawler"
+  short_description: "Export authenticated browser docs to HTML and Markdown."
+  default_prompt: "Use $browser-doc-crawler to export this logged-in documentation site to local HTML and Markdown."

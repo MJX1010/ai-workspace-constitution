@@ -16,6 +16,13 @@
 - 子目录局部规则用于补充或收窄上层规则；如出现冲突，以更靠近目标项目或目标文件的说明为准，但不得违反 DragonPow2 顶层共享的语言、安全、协议边界和验证规则。
 - 阶段性说明或最终回复中应简要说明已采用的关键层级、skill 或 docs/reference；若某层不存在相关资料，记录后继续向下查找，不要因为顶层已有规则就跳过子项目局部说明。
 
+## Skill 编写与维护约束
+
+- 新增或修改 DragonPow2 项目内 skill 时，`SKILL.md` frontmatter 的 `description` 必须使用中文描述能力、触发条件和适用场景；正文中的触发条件、工作流、注意事项也必须优先使用中文，不写英文触发语句。
+- skill 内引用工程文件、脚本、模板、docs、reference、assets 时，只使用相对 skill 目录、相对项目根目录或明确占位变量路径；不得写入 Windows 盘符开头路径、个人用户名目录或其他本机绝对工程路径。
+- 若必须举路径示例，使用 `<项目根目录>\client\...`、`${WORKSPACE_ROOT}\DragonPow2\...` 或 `references/foo.md` 这类可迁移写法；保留 API 名称、命令名、字段名、目录名原文。
+- 更新 skill 后，需要检查 `agents/openai.yaml` 等界面元数据是否仍与 `SKILL.md` 中文描述一致；若触发语义变化，必须同步更新对应元数据。
+
 ## 编码设计原则
 
 - 编码应遵循设计模式和面向对象设计原则，优先保证单一职责、依赖倒置、接口隔离和开放封闭。
@@ -62,6 +69,12 @@ uloop compile --project-path client/Unity --wait-for-domain-reload true
 
 - 见到 `LOCAL_REVIEW_PACKET: READY` 后，在当前对话内 review 该 diff，并一并检查直接 caller / callee / references，按 RED / YELLOW / GREEN 分类。
 - RED 必须修复后才算完成；YELLOW 按风险判断，未修需说明原因；不发送飞书通知，不归档报告。
+
+## 最终输出与提交日志
+
+- 每次实际修改代码、Unity 资源、生成代码、配置或项目文档后，最终回复必须提供一段可直接复制使用的建议 commit 日志，便于用户手动提交。
+- 建议 commit 日志至少包含一行提交标题、要点式变更摘要和已执行的验证命令/结果；若有验证未执行或失败，必须在 commit 日志旁明确说明原因与风险。
+- 提交标题应简洁表达真实改动范围，例如 `fix(client): handle prop protocol fallback`、`docs(agent): update uloop test rule`；不要夸大范围，不把未完成或未验证的内容写成已完成。
 
 ## Agent 文档统一管理
 
