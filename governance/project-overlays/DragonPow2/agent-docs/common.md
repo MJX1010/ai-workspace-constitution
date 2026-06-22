@@ -8,7 +8,7 @@
 ## 跨目录协作上下文发现
 
 - 当从 `D:\Projects\DragonPow2` 顶层目录对 `D:\Projects\DragonPow2\DragonPow2_Trunk_Leaning`、`D:\Projects\DragonPow2\DragonPow2_Trunk_Leaning\client` 等子目录项目开展 AI agent 对话协作时，必须按“顶层目录 -> 项目根目录 -> 子模块目录 -> 目标文件所在目录”的顺序逐层查找上下文。
-- 每一层优先检查 `AGENTS.md`、`CLAUDE.md`、`.agents\skills\`、`.codex\skills\`、`.agents\docs\`、`docs\`、`reference\`、`references\`、`README.md` 等；任务涉及特定模块时，继续向下检查该模块附近的同类说明、脚本和模板。
+- 每一层优先检查 `AGENTS.md`、`CLAUDE.md`、`.skills\`、`.agents\skills\`、`.codex\skills\`、`.agents\docs\`、`docs\`、`reference\`、`references\`、`README.md` 等；任务涉及特定模块时，继续向下检查该模块附近的同类说明、脚本和模板。
 - 发现可用 skill 时，先读取对应 `SKILL.md` 的触发条件和工作流；若 skill 引用 `docs`、`reference`、模板或脚本，按相对路径从该 skill 所在目录解析，只加载与当前任务直接相关的资料。
 - 子目录局部规则用于补充或收窄上层规则；如出现冲突，以更靠近目标项目或目标文件的说明为准，但不得违反 DragonPow2 顶层共享的语言、安全、协议边界和验证规则。
 - 阶段性说明或最终回复中应简要说明已采用的关键层级、skill 或 docs/reference；若某层不存在相关资料，记录后继续向下查找，不要因为顶层已有规则就跳过子项目局部说明。
@@ -16,6 +16,7 @@
 ## Skill 编写与维护约束
 
 - 新增或修改 DragonPow2 项目内 skill 时，`SKILL.md` frontmatter 的 `description` 必须使用中文描述能力、触发条件和适用场景；正文中的触发条件、工作流、注意事项也必须优先使用中文，不写英文触发语句。
+- 新增项目本地或 Unity 本地 skill 时，优先放在距离使用场景最近的 `.skills\` 目录；不要默认放到 `.agents\skills\`，除非当前工具链明确只扫描该目录。
 - skill 内引用工程文件、脚本、模板、docs、reference、assets 时，只使用相对 skill 目录、相对项目根目录或明确占位变量路径；不得写入 Windows 盘符开头路径、个人用户名目录或其他本机绝对工程路径。
 - 若必须举路径示例，使用 `<项目根目录>\client\...`、`${WORKSPACE_ROOT}\DragonPow2\...` 或 `references/foo.md` 这类可迁移写法；保留 API 名称、命令名、字段名、目录名原文。
 - 更新 skill 后，需要检查 `agents/openai.yaml` 等界面元数据是否仍与 `SKILL.md` 中文描述一致；若触发语义变化，必须同步更新对应元数据。
@@ -55,20 +56,35 @@ uloop compile --project-path client/Unity --wait-for-domain-reload true
 - 若 Unity 启动或连接最终仍失败，保底使用 `dotnet build` 进行编译验证，并在最终说明中写明已降级为 dotnet、降级原因及 uLoop 不可用的事实。
 - 正常情况下 `dotnet build` 仅作额外检查，不能替代 uLoop 的 Editor 编译状态。
 
-## 本地 Review Gate（cr_local）
+## 本地全面 Review Gate
 
-- 完成代码改动后，若该工作副本 `client` 下存在 `Tools/codereview/cr_local.ps1`，必须在通过 Unity 编译验证后再跑一次本地 review gate，作为完成前的强制门禁。
-- 从 client 工作副本根目录运行（脚本自动识别 SVN/Git diff，用 `-Path` 收窄到本次改动文件）：
+- 对 agent 来说，code review 是代码交付的默认自动行为；只要实际修改代码、Unity 资源、配置、脚本或可能影响行为的项目文档，就必须主动执行本地全面 Review Gate，不依赖用户额外提醒或显式输入 review 关键词；详细步骤以本节规则和 `cr_local.ps1` 输出的 review packet 为准。
+- 纯咨询、只读分析、无行为影响的低风险文本修改不触发完整 review gate；若后续进入代码或行为相关改动，立即按本节执行。
+- `cr_local.ps1` 只负责生成本地 diff review packet 和统一审查提示，不能替代当前对话内的全面 review。
+- 完整顺序：刷新或确认 codegraph 索引 -> 运行项目编译 / 测试门禁 -> 运行 `cr_local.ps1` 生成 packet -> 在当前对话内基于 diff、codegraph caller / callee / impact、references、平台矩阵和生命周期风险做全面 review -> 修复 RED / YELLOW 后重新跑完整闭环。
+- codegraph 是上下文和影响面工具，不是 diff source of truth；若当前环境提供 codegraph refresh / index 命令，必须先执行；若只提供查询工具，则用 `codegraph_status` / `codegraph_explore` 确认索引可用且目标文件可见；若 codegraph 更新不可用或索引明显过期，必须说明降级，并用 `rg` + `csharp-ls` / `uloop compile` 补足引用和编译检查。
+- 非平凡代码改动或涉及启动/退出、生命周期、构建宏、平台矩阵、持久化状态、发布链路等高风险面时，若当前工具链支持 agent，应优先启动只读 reviewer subagent 复审 `cr_local` packet；最终 RED / YELLOW / GREEN 结论仍必须回到当前对话，由主 agent 复核、修复并重跑闭环。
+- 从 client 工作副本根目录运行 `cr_local.ps1`（脚本自动识别 SVN/Git diff，用 `-Path` 收窄到本次改动文件和必要直接相关文件）：
 
 ```powershell
 .\Tools\codereview\cr_local.ps1 -Path @('Unity\Assets\Scripts\...\Changed.cs')
 ```
 
-- 见到 `LOCAL_REVIEW_PACKET: READY` 后，在当前对话内 review 该 diff，并一并检查直接 caller / callee / references，按 RED / YELLOW / GREEN 分类。
-- RED 必须修复后才算完成；YELLOW 按风险判断，未修需说明原因；不发送飞书通知，不归档报告。
+- 见到 `LOCAL_REVIEW_PACKET: READY` 后，在当前对话内 review 该 diff；RED 必须修复后才算完成，YELLOW 默认修复或说明风险和不修原因，GREEN 可作为后续建议；不发送飞书通知，不归档报告，不自动提交。
+
+## Unity Skill 与 SVN Externals
+
+- `client\Unity\.codex\skills` 和 `client\Unity\.claude\skills` 通过 SVN externals 指向同一份 `../.skills skills`，维护 Unity 本地 skill 时只改 `client\Unity\.skills`，不要在 `.codex\skills` 或 `.claude\skills` 下复制正文。
+- 本地全面 Review Gate 是 agent 默认交付规则，不维护单独 skill，也不维护 `.agents\skills` 薄入口；只有工具链实测只能通过 skill 执行且用户明确要求时，才新增薄入口，并且只引用本节规则，不复制 checklist。
+- 修改 review gate 规则时，先更新 `governance\agent-docs\` 模板并运行同步脚本，避免各级 `AGENTS.md` / `CLAUDE.md` 漂移。
 
 ## 最终输出与提交日志
 
+- 禁止在 SVN/Git 提交日志、构建说明、变更摘要中写入乱码、问号占位或无法确认编码的中文；中文日志必须先在当前 UTF-8 终端或文件中确认可读，再交给 `svn commit -m`、TortoiseSVN、Jenkins 或其它提交/发布工具。
+- 在 Windows/PowerShell 下准备包含中文的 SVN/Git 日志时，先确认 `chcp 65001`、`$OutputEncoding = [System.Text.UTF8Encoding]::new($false)`，必要时把日志写入 UTF-8 文本文件再由工具读取，避免 GBK/UTF-8 混用导致历史记录乱码。
+- Windows/PowerShell 下提交中文 SVN 日志时，优先把日志写入 UTF-8 文本文件并使用 `svn commit -F <日志文件> --encoding utf-8`；避免直接用 `svn commit -m "中文..."`，除非已在当前终端确认编码不会被转换。
+- 任何 `svn commit`、`git commit`、`svn import`、`svn copy`、push、上传制品、发布构建、触发线上/后台提交类操作，执行前必须单独询问用户并得到明确确认；不能把“继续”“修复”“帮我处理”理解为提交或上传授权。
+- 涉及 Unity 客户端、多平台构建、补丁、CDN、Jenkins 或发布入口的改动，提交前必须明确受影响平台矩阵并完成本地可行的编译/测试；提交后必须触发并确认 Android/iOS 等受影响平台构建通过，失败则继续修复，不能把未验证或未通过状态写成已完成。
 - 每次实际修改代码、Unity 资源、生成代码、配置或项目文档后，最终回复必须提供一段可直接复制使用的建议 commit 日志，便于用户手动提交。
 - 建议 commit 日志至少包含一行提交标题、要点式变更摘要和已执行的验证命令/结果；若有验证未执行或失败，必须在 commit 日志旁明确说明原因与风险。
 - 提交标题应简洁表达真实改动范围，例如 `fix(client): handle prop protocol fallback`、`docs(agent): update uloop test rule`；不要夸大范围，不把未完成或未验证的内容写成已完成。

@@ -78,6 +78,7 @@ components:
       - governance/workspace-skills/shared/skill-factory-playbook/
       - governance/workspace-skills/shared/feature-spec-workflow/
       - governance/workspace-skills/shared/github-sync-commit/
+      - governance/workspace-skills/shared/dragonpow2-overlay-sync/
       - governance/workspace-skills/shared/browser-doc-crawler/
       - governance/workspace-skills/shared/karpathy-guidelines/
     target_dir: "${WORKSPACE_ROOT}/.codex/skills"
@@ -92,6 +93,7 @@ components:
       - governance/workspace-skills/shared/skill-factory-playbook/
       - governance/workspace-skills/shared/feature-spec-workflow/
       - governance/workspace-skills/shared/github-sync-commit/
+      - governance/workspace-skills/shared/dragonpow2-overlay-sync/
       - governance/workspace-skills/shared/browser-doc-crawler/
       - governance/workspace-skills/shared/karpathy-guidelines/
     target_dir: "${WORKSPACE_ROOT}/.claude/skills"
@@ -106,6 +108,7 @@ components:
       - governance/workspace-skills/shared/skill-factory-playbook/
       - governance/workspace-skills/shared/feature-spec-workflow/
       - governance/workspace-skills/shared/github-sync-commit/
+      - governance/workspace-skills/shared/dragonpow2-overlay-sync/
       - governance/workspace-skills/shared/browser-doc-crawler/
       - governance/workspace-skills/shared/karpathy-guidelines/
     target_dir: "${WORKSPACE_ROOT}/.agents/skills"

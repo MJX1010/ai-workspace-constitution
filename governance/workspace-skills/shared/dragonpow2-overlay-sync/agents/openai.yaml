@@ -1,0 +1,4 @@
+interface:
+  display_name: "DragonPow2 Overlay 同步"
+  short_description: "同步 DragonPow2 live 治理规则与 constitution overlay。"
+  default_prompt: "使用 $dragonpow2-overlay-sync 同步 DragonPow2 live 治理规则与 ai-workspace-constitution overlay。"
