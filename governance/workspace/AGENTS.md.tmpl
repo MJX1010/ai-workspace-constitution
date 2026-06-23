@@ -1,142 +1,162 @@
-# ${WORKSPACE_NAME} Workspace Rules
+# ${WORKSPACE_NAME} 工作区规则
 
-This `AGENTS.md` defines the top-level operating contract for the `${WORKSPACE_ROOT}` workspace.
+本文件是 `${WORKSPACE_ROOT}` 的顶层通用规则。子目录里的 `AGENTS.md`、`CLAUDE.md`、本地 skills 或用户当前要求优先级更高。
 
-It applies across multiple repositories and subworkspaces under `${WORKSPACE_ROOT}`. More specific rules in deeper folders override this file.
+优先级：
 
-Follow this hierarchy:
+1. system / developer 指令
+2. 用户当前要求
+3. 最近目录的 `AGENTS.md`
+4. 父级 `AGENTS.md`
+5. 被触发的本地 skills 及其引用
 
-1. System and developer instructions
-2. User request
-3. Closest `AGENTS.md`
-4. Parent `AGENTS.md`
-5. Triggered local skills and their references
+## 工作区模型
 
-## Scope
+`${WORKSPACE_ROOT}` 是多仓库工作区，不是单一代码库。常见子工作区包括 `DragonPow2/`、`lqs_automation/`、`ET_Main/`、`ET_Main_Unity2022/`、`aime_workspace/`、`trae_workspace/`。
 
-Treat `${WORKSPACE_ROOT}` as a multi-repository workspace, not a single codebase.
+用户在当前对话 session 中声明了具体工程路径时，必须先规范化为绝对路径并把它当作本轮目标根目录；环境探测、VCS、构建、代码生成、review 和文档同步命令默认从该根目录或其明确子目录执行。不要凭目录名猜测或拼出其它工程根，例如把 `<用户声明的工程根>` 误当成 `<工作区根>\Trunk`。只有在维护顶层治理文件或共享 specs/skills 时，才回到 `${WORKSPACE_ROOT}`。
 
-Examples of child workspaces include:
+动手前先确认：
 
-- `DragonPow2/`
-- `lqs_automation/`
-- `ET_Main/`
-- `ET_Main_Unity2022/`
-- `aime_workspace/`
-- `trae_workspace/`
+1. 目标仓库
+2. 最近规则文件
+3. 归属模块
+4. 真正 source of truth
+5. 验证路径
 
-Before editing, identify:
+从 `${WORKSPACE_ROOT}` 顶层对某个子目录项目发起 AI agent 对话协作时，必须按路径自上而下逐层发现上下文：先看顶层 `AGENTS.md` / `CLAUDE.md`、`.agents/skills/`、`.codex/skills/`、`.claude/skills/` 以及共享 `docs` / `references`；再进入目标子目录，逐层查找更近的 `AGENTS.md` / `CLAUDE.md`、本地 skills、项目 docs、references、README、specs 等。越靠近目标目录的规则优先；顶层内容只作为默认上下文，不覆盖子项目的 source of truth。
 
-1. which repository owns the change
-2. whether that repository has its own local rules
-3. whether the task is repo-specific or truly cross-workspace
+不要把一个仓库的架构约定默认套到另一个仓库。
 
-Do not apply one repo's local architecture rules to another repo by default.
+## 通用规则
 
-## Global Rules
+### 1. 最近规则优先
 
-### 1. Closest rule wins
+仓库内规则覆盖工作区通用规则；项目专用 skill 覆盖泛用 skill。
 
-Repository-local rules beat workspace-global defaults.
-Project-specific skills beat generic workspace skills.
+### 2. 顶层规则保持通用
 
-### 2. Global rules stay generic
+这里只有可跨仓库复用的规则。产品、框架、功能细节放到对应仓库或模块内。
 
-Only keep rules here if they are reusable across multiple repositories.
-Do not place product-specific, framework-specific, or feature-specific details in this file.
+### 3. 治理文档必须中文，减少上下文
 
-### 3. Source of truth first
+编写或更新 `AGENTS.md`、`CLAUDE.md`、skills、docs 时，**必须使用简体中文**；必要技术名词保留英文。英文治理文档视为不合格，需翻译后才能使用。
 
-Before patching, determine whether the editable source is:
+这些文件要短、稳定、低上下文占用：
 
-- hand-written source code
-- generated output
-- schema or config definition
-- template or scaffolding
-- cached or derived artifact
+- 写规则，不写长背景
+- 避免多文件重复解释
+- 能引用就不要整段复制
+- 示例保持短且可直接执行
 
-Modify the true source of truth, not the nearest visible artifact.
+仅当用户明确要求产出文档、报告、方案、说明书、复盘、规范等文档类交付物，或任务本身明确以文档为产物时，才生成文档文件。此类交付默认使用双格式：先生成可维护的 `.md` 源文档，同时生成一份可直接浏览的自包含 `.html`，参考 <https://thariqs.github.io/html-effectiveness/> 的做法。两份文档正文默认使用简体中文；Markdown 负责版本管理和后续编辑，HTML 负责更高信息密度的阅读、演示、图表、时间线、对比和轻交互。普通代码修改、问答、review、排障不自动额外生成 `.md` 或 `.html`。
 
-### 4. Ownership before edits
+### 4. 先找 source of truth
 
-Before substantial edits, determine:
+修改前判断目标是手写源码、生成物、schema/config、模板，还是缓存/派生产物。优先改真正来源，不直接改可再生成的表面产物。
 
-1. owner repo
-2. owner module
-3. dependency direction
-4. verification surface
+### 5. 先确认归属
 
-If those are unclear, gather context first.
+较大改动前确认 owner repo、owner module、依赖方向和验证面。不清楚就先读代码和规则。
 
-### 5. Minimal but complete changes
+### 6. 改动要小而完整
 
-A valid change should include the full impact slice:
+有效改动应覆盖必要闭环：实现、同步点、可复用规则更新、验证。避免顺手重构无关范围。
 
-- implementation
-- required sync points
-- documentation or rule update if a reusable invariant was discovered
-- appropriate validation
+### 7. 知识沉淀
 
-### 6. Knowledge capture is part of the work
+发现稳定规则、坑点或工作流时，更新最近合适的治理文件或 skill，例如仓库内 `AGENTS.md`、本地 skill、共享 skill、面向人的说明文档。
 
-If a durable rule, pitfall, or workflow is discovered, update the nearest appropriate governance artifact:
+共享 skill 命名必须按能力、框架或工作流命名，不写项目名前缀；项目限定条件写入触发场景或更近的项目本地 skill。skill 正文、示例和元数据不得写入本机绝对工程路径、个人用户名目录或 Windows 盘符路径；使用会话声明的目标根、`<项目根目录>` / `<Unity工程根>` 等占位变量或相对路径。
 
-- repo-local `AGENTS.md`
-- local skill
-- shared workspace skill
-- human-facing overview doc
+### 8. C# 语义工具
 
-## AI Vibe Coding Guardrails
+C#/.NET 工作区，包括 Unity 生成 `.sln` / `.csproj` 的项目，默认用 `csharp-ls` 做语义检查：diagnostics、go-to-definition、references、rename safety、跨文件类型分析等。
 
-Allowed:
+从目标仓库根目录和最近相关 `.sln` / `.csproj` 开始。若 Unity 或旧 MSBuild 项目加载失败，说明失败原因，并优先回退到该仓库正常验证方式；只有 Unity 项目加载确实需要时再考虑 OmniSharp。
 
-- nearby pattern matching
-- bounded refactors
-- explicit assumptions
-- progressive consolidation of stable rules
+### 9. 完成前本地 review
 
-Forbidden:
+创建或修改代码后，完成回复前运行最近的仓库本地 review gate，并把结果带回当前对话。
 
-- blind cross-repo rewrites
-- speculative migrations
-- silent regeneration of broad surfaces
-- carrying one repo's local conventions into another repo without evidence
-- adding abstraction before repeated need is established
+### 10. Unity 项目操作约束
 
-## Active Feature Tracking
+Unity 项目的缓存和编译状态是脆弱的，以下操作**禁止执行**：
 
-For any non-trivial change (anything not describable as a one-sentence diff),
-the persistent state lives in `${WORKSPACE_ROOT}/specs/<NNN-feature>/`:
+- **删除 `Library/` 文件夹** — 破坏资源数据库，强制全量重建
+- **执行 `Reimport All`** — 重新导入整个项目所有资源，耗时过长
+- **删除 `Temp/` 文件夹** — 可能导致编译缓存丢失
 
-- `spec.md`  — intent, acceptance criteria, status (Draft | InProgress | Review | Done | Abandoned)
-- `plan.md`  — technical blueprint, affected files, risks
-- `tasks.md` — `- [ ]` checkbox list (machine-parsable progress tracker)
+当 Unity 文件监视器失效（外部修改文件后 Unity 不检测变化）时，**只对变更内容做增量操作**：
 
-**Any AI tool entering this workspace must:**
+1. **Unity Editor 内** — 选中变更文件 → 右键 → Reimport（只导入选中项）
+2. **命令行** — 用 `-executeMethod` 调用 `AssetDatabase.ImportAsset(path)` 只导入特定路径
+3. **修改 .meta 文件** — 只修改变更文件的 `.meta`，触发 Unity 检测变化
+4. **重启 Unity（不删缓存）** — 关闭再打开，Unity 会增量检测变化
 
-1. Before writing code, check `specs/` for an in-progress feature.
-2. If one exists and matches the user's request, resume from the first `- [ ]` task.
-3. If none exists and the request is non-trivial, create one via the
-   `feature-spec-workflow` skill (installed at `.codex/skills/feature-spec-workflow/`
-   and `.claude/skills/feature-spec-workflow/`). The skill ships fill-in
-   templates under its `references/` directory.
-4. Mark `- [x]` immediately on task completion. Commit per task.
+**原则：最小化影响范围，只处理变更内容，不做全局操作。**
 
-State lives in files, not in chat. Sessions are disposable; `git log` is authoritative.
+`${WORKSPACE_ROOT}\DragonPow2` 下如存在 `Tools/codereview/cr_local.ps1`，从项目根目录运行：
 
-This layout is intentionally compatible with GitHub Spec Kit, Kiro, ECC's
-`/prp-*` commands, and Superpowers' `writing-plans` skill. Use whichever
-toolchain you prefer — the on-disk artifacts stay the same.
+```powershell
+.\Tools\codereview\cr_local.ps1 -Path @('path\to\changed-file.cs')
+```
 
-## Shared Governance Layout
+review 范围应包含改动文件及直接相关 caller、callee、references、生成项目元数据、skill/tool 镜像。不要发送飞书通知，不要把 review 做成用户看不到的后台步骤。
 
-Preferred top-level artifact layout:
+RED 发现必须修复后再完成；YELLOW 按风险判断，低风险则修，未修要说明原因。若目标仓库没有本地 review gate，使用该仓库正常 test/lint/build/验证方式并说明 fallback。
+
+### 10. Karpathy 行为准则
+
+`karpathy-guidelines` 安装在 `.agents/skills/karpathy-guidelines/`。写代码、review、重构时可触发使用：先明确假设，保持简单，精准小改，定义可验证成功标准。
+
+### 11. 环境与编码基线
+
+跨仓库通用的环境/编码纪律；工具实现见 `ai_projects/ai_cli_profiles/profiles/ai-helpers.ps1`（由 PowerShell `$PROFILE` 链式加载）。
+
+- 开工先 `ai-env-probe`（别名 `aienv`）：以实测 cwd/HOME 为准，不信任注入的平台/路径元数据；判定 VCS 是 SVN 还是 Git 后再选 `svn`/`git`。
+- 临时文件按用途选落点：项目产物、生成中间件、工具要求相对路径时，放在目标工程内的受控临时目录（例如 Unity 项目的 `Temp/UI_AutoGen/`），不要放到无关仓库或 `${WORKSPACE_ROOT}` 顶层；一次性 helper 脚本可放 `$env:TEMP`，但仅限工具明确接受绝对路径且脚本不会成为项目 source of truth 的场景。
+- Windows 中文统一 UTF-8：`chcp 65001` + 控制台/`$OutputEncoding` UTF-8、`PYTHONUTF8=1`；PowerShell 启动 helper 必须为 `Get-Content` / `Set-Content` / `Add-Content` / `Out-File` 等文本命令设置 UTF-8 默认编码，避免 PS 5.1 回落到 ANSI 或 UTF-16LE。
+- **含中文的 `.ps1` 存 UTF-8 with BOM**（PS 5.1 否则按 GBK 解析乱码）；给程序读的 JSON/TOML 写无 BOM；需要无 BOM 写文本时优先用 `Write-Utf8NoBom`，不要依赖 PS 5.1 的 `Set-Content` / `Out-File` 默认行为。
+- 中文是硬性质量门禁：SVN/Git 提交日志、构建说明、Jenkins/TortoiseSVN 展示文本、部署说明和变更摘要中禁止出现乱码、Unicode replacement character（U+FFFD）、`??` 占位或无法确认编码的中文；一旦发现必须先停下来定位编码边界，不能继续提交、发布或把乱码写入历史。
+- Windows/PowerShell 下提交中文 SVN 日志时，必须把日志写入 UTF-8 文本文件并使用 `svn commit -F <日志文件> --encoding utf-8`；自动提交脚本禁止拼接 `svn commit -m "中文..."`。提交后用 `svn log -r <rev> --xml` 或 TortoiseSVN 验证中文可读且无 U+FFFD/问号占位。
+- **禁止提交 `AGENTS.md` / `CLAUDE.md`**：这些治理入口文件默认只能本地修改用于当前协作上下文，不能纳入 SVN/Git commit、import、copy、push 或自动提交。只有用户在当前对话中明确点名“提交 AGENTS.md/CLAUDE.md”并给出单独授权时，才允许提交指定文件；普通“提交”“继续”“同步规则”都不构成授权。
+- 任何 `svn commit`、`git commit`、`svn import`、`svn copy`、push、上传制品、发布构建、触发线上/后台提交类操作，执行前必须单独询问用户并得到明确确认；不能把“继续”“修复”“帮我处理”理解为提交或上传授权。
+- 涉及 Unity 客户端、多平台构建、补丁、CDN、Jenkins 或发布入口的改动，提交前必须明确受影响平台矩阵并完成本地可行的编译/测试；提交后必须触发并确认 Android/iOS 等受影响平台构建通过，失败则继续修复，不能把未验证或未通过状态写成已完成。
+- 会话续接用 `ai-handoff -Project -Module -Purpose`（项目_模块_用途_日期 四件套）。
+
+## AI 辅助编码边界
+
+允许：近邻模式匹配、有限重构、明确假设、稳定规则的渐进沉淀。
+
+禁止：盲目跨仓库改写、猜测性迁移、无声大范围再生成、无证据套用其它仓库约定、没有重复需求就新增抽象。
+
+## 活跃功能追踪
+
+非平凡改动（无法用一句 diff 描述）应在 `${WORKSPACE_ROOT}\specs\<NNN-feature>\` 记录状态：
+
+- `spec.md`：意图、验收标准、状态
+- `plan.md`：技术方案、影响文件、风险
+- `tasks.md`：`- [ ]` 任务列表
+
+进入工作区后：
+
+1. 写代码前检查 `specs/` 是否有匹配的进行中功能
+2. 匹配则从第一个未完成任务恢复
+3. 无匹配且任务非平凡，则按 `feature-spec-workflow` skill 创建
+4. 任务完成后立即标记 `- [x]`
+
+状态写进文件，不依赖聊天记录。
+
+## 共享治理布局
+
+推荐顶层结构：
 
 - `AGENTS.md`
 - `CLAUDE.md`
 - `GEMINI.md`
+- `.agents/skills/`
 - `.codex/skills/`
 - `.claude/skills/`
 
-Use this layer for generic workspace governance only.
-Keep repo-specific overlays inside the corresponding repo.
+本层只放通用治理；仓库专用覆盖写在对应仓库内。

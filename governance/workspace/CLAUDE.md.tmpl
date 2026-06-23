@@ -1,50 +1,87 @@
-# Claude Workspace Instructions
+# Claude 工作区规则
 
-This file is the Claude-oriented rendering of the top-level rules for `${WORKSPACE_ROOT}`.
+本文件是 `${WORKSPACE_ROOT}` 顶层规则的 Claude 版本。若更近目录存在 `AGENTS.md`、`CLAUDE.md` 或本地 skills，优先使用更近规则。
 
-If a deeper repository contains its own `AGENTS.md`, `CLAUDE.md`, or local skills, prefer the closer instructions.
+## 工作区模型
 
-## Workspace Model
+`${WORKSPACE_ROOT}` 是多仓库工作区。不要假设所有目录共享同一套架构、工具链或依赖模型。
 
-Treat `${WORKSPACE_ROOT}` as a multi-repository workspace.
-Do not assume all folders share one architecture, toolchain, or dependency model.
+用户在当前对话 session 中声明了具体工程路径时，先规范化为绝对路径，并把它作为本轮目标根目录；环境探测、VCS、构建、代码生成、review 和文档同步命令默认从该根目录或其明确子目录执行。不要猜测或拼接其它工程根，例如把 `<用户声明的工程根>` 误当成 `<工作区根>\Trunk`。只有维护顶层治理、共享 specs 或共享 skills 时，才回到 `${WORKSPACE_ROOT}`。
 
-Before changing code, determine:
+改代码前确认：
 
-1. target repository
-2. nearest rule file
-3. owner module
+1. 目标仓库
+2. 最近规则文件
+3. 归属模块
 4. source of truth
-5. validation path
+5. 验证路径
 
-## Core Constraints
+从 `${WORKSPACE_ROOT}` 顶层对某个子目录项目发起 AI agent 对话协作时，必须按路径自上而下逐层发现上下文：先看顶层 `AGENTS.md` / `CLAUDE.md`、`.agents/skills/`、`.codex/skills/`、`.claude/skills/` 以及共享 `docs` / `references`；再进入目标子目录，逐层查找更近的 `AGENTS.md` / `CLAUDE.md`、本地 skills、项目 docs、references、README、specs 等。越靠近目标目录的规则优先；顶层内容只作为默认上下文，不覆盖子项目的 source of truth。
 
-### Closest instructions override broad defaults
+## 核心约束
 
-Use top-level rules only as generic guidance.
-Use repo-local rules for real architectural decisions.
+### 最近规则覆盖顶层默认
 
-### Do not generalize one repo's rules to another
+顶层规则只提供通用约束；真实架构决策以仓库内规则为准。
 
-Unity, ET, automation, and tool repos may look similar but can have different ownership and codegen models.
+### 不跨仓库套用约定
 
-### Do not edit generated output directly
+Unity、ET、自动化、工具仓库可能相似，但 ownership、codegen、验证方式可能不同。
 
-Generated artifacts, exported files, cache outputs, and codegen results should be treated as protected until proven otherwise.
+### 不直接改生成物
 
-### Avoid uncontrolled sweeps
+生成文件、导出文件、缓存输出、codegen 结果，在证明它就是 source of truth 前都视为受保护产物。
 
-Do not make broad multi-repo edits without an explicit blast-radius estimate and a validation strategy.
+### 避免失控扫改
 
-### Capture reusable knowledge
+没有明确影响范围和验证策略，不做大规模跨仓库编辑。
 
-When you discover a stable workflow or rule, update the nearest appropriate skill or governance file.
+### 治理文档必须中文，减少上下文
 
-## Preferred Style
+编写或更新 `AGENTS.md`、`CLAUDE.md`、skills、docs 时，**必须使用简体中文**；必要技术名词保留英文。英文治理文档视为不合格，需翻译后才能使用。
 
-Prefer Simplified Chinese with English technical terms when writing shared governance docs for this workspace.
+这些文件要短、稳定、低上下文占用：写规则，不写长背景；避免重复；能引用就不要整段复制；示例保持短且可执行。
 
-## Related Files
+仅当用户明确要求产出文档、报告、方案、说明书、复盘、规范等文档类交付物，或任务本身明确以文档为产物时，才生成文档文件。此类交付默认使用双格式：先生成可维护的 `.md` 源文档，同时生成一份可直接浏览的自包含 `.html`，参考 <https://thariqs.github.io/html-effectiveness/> 的做法。两份文档正文默认使用简体中文；Markdown 负责版本管理和后续编辑，HTML 负责更高信息密度的阅读、演示、图表、时间线、对比和轻交互。普通代码修改、问答、review、排障不自动额外生成 `.md` 或 `.html`。
+
+### 沉淀可复用知识
+
+发现稳定工作流或规则时，更新最近合适的治理文件或 skill。
+
+共享 skill 命名必须按能力、框架或工作流命名，不写项目名前缀；项目限定条件写入触发场景或更近的项目本地 skill。skill 正文、示例和元数据不得写入本机绝对工程路径、个人用户名目录或 Windows 盘符路径；使用会话声明的目标根、`<项目根目录>` / `<Unity工程根>` 等占位变量或相对路径。
+
+### 完成前本地 review
+
+创建或修改代码后，完成回复前运行最近的仓库本地 review gate，并把结果带回当前对话。
+
+`${WORKSPACE_ROOT}\DragonPow2` 下如存在 `Tools/codereview/cr_local.ps1`，从项目根目录运行：
+
+```powershell
+.\Tools\codereview\cr_local.ps1 -Path @('path\to\changed-file.cs')
+```
+
+review 范围包含改动文件及相关 caller、callee、references、生成项目元数据、skill/tool 镜像。不要发送飞书通知。RED 发现必须修复后再完成。
+
+### 环境与编码基线
+
+跨仓库通用环境/编码纪律；工具实现见 `ai_projects/ai_cli_profiles/profiles/ai-helpers.ps1`（PowerShell `$PROFILE` 链式加载）。
+
+- 开工先 `ai-env-probe`（别名 `aienv`）：以实测 cwd/HOME 为准，不信任注入的平台/路径元数据；判定 SVN 还是 Git 再选命令。
+- 临时文件按用途选落点：项目产物、生成中间件、工具要求相对路径时，放在目标工程内的受控临时目录（例如 Unity 项目的 `Temp/UI_AutoGen/`），不要放到无关仓库或 `${WORKSPACE_ROOT}` 顶层；一次性 helper 脚本可放 `$env:TEMP`，但仅限工具明确接受绝对路径且脚本不会成为项目 source of truth 的场景。
+- Windows 中文统一 UTF-8：`chcp 65001` + 控制台/`$OutputEncoding` UTF-8、`PYTHONUTF8=1`；PowerShell 启动 helper 必须为 `Get-Content` / `Set-Content` / `Add-Content` / `Out-File` 等文本命令设置 UTF-8 默认编码，避免 PS 5.1 回落到 ANSI 或 UTF-16LE。
+- **含中文的 `.ps1` 存 UTF-8 with BOM**（PS 5.1 否则乱码）；给程序读的 JSON/TOML 写无 BOM；需要无 BOM 写文本时优先用 `Write-Utf8NoBom`，不要依赖 PS 5.1 的 `Set-Content` / `Out-File` 默认行为。
+- 中文是硬性质量门禁：SVN/Git 提交日志、构建说明、Jenkins/TortoiseSVN 展示文本、部署说明和变更摘要中禁止出现乱码、Unicode replacement character（U+FFFD）、`??` 占位或无法确认编码的中文；一旦发现必须先停下来定位编码边界，不能继续提交、发布或把乱码写入历史。
+- Windows/PowerShell 下提交中文 SVN 日志时，必须把日志写入 UTF-8 文本文件并使用 `svn commit -F <日志文件> --encoding utf-8`；自动提交脚本禁止拼接 `svn commit -m "中文..."`。提交后用 `svn log -r <rev> --xml` 或 TortoiseSVN 验证中文可读且无 U+FFFD/问号占位。
+- **禁止提交 `AGENTS.md` / `CLAUDE.md`**：这些治理入口文件默认只能本地修改用于当前协作上下文，不能纳入 SVN/Git commit、import、copy、push 或自动提交。只有用户在当前对话中明确点名“提交 AGENTS.md/CLAUDE.md”并给出单独授权时，才允许提交指定文件；普通“提交”“继续”“同步规则”都不构成授权。
+- 任何 `svn commit`、`git commit`、`svn import`、`svn copy`、push、上传制品、发布构建、触发线上/后台提交类操作，执行前必须单独询问用户并得到明确确认；不能把“继续”“修复”“帮我处理”理解为提交或上传授权。
+- 涉及 Unity 客户端、多平台构建、补丁、CDN、Jenkins 或发布入口的改动，提交前必须明确受影响平台矩阵并完成本地可行的编译/测试；提交后必须触发并确认 Android/iOS 等受影响平台构建通过，失败则继续修复，不能把未验证或未通过状态写成已完成。
+- 会话续接用 `ai-handoff -Project -Module -Purpose`（项目_模块_用途_日期）。
+
+## 推荐风格
+
+共享治理文档、skills、项目 docs 默认用简体中文；技术名词可保留英文以保证准确。
+
+## 相关文件
 
 - `AGENTS.md`
 - `GEMINI.md`
