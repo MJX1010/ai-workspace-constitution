@@ -145,6 +145,34 @@ components:
     target: "${WORKSPACE_ROOT}/.codex/config.toml"
     mode: replace
 
+  # ── Global Codex reusable surfaces ─────────────────────────────────
+  # These are user-level Codex role/skill snapshots that are safe to
+  # materialise on a new machine. Runtime state, auth, logs, and .system
+  # bundled skills are deliberately excluded.
+  global_codex_agents:
+    enabled: true
+    description: "User-level Codex agent role definitions"
+    sources:
+      - governance/global/codex/agents/
+    target_dir: "${USER_HOME}/.codex"
+    mode: replace
+
+  global_codex_skills:
+    enabled: true
+    description: "User-level Codex non-system skill snapshots"
+    sources:
+      - governance/global/codex/skills/
+    target_dir: "${USER_HOME}/.codex"
+    mode: replace
+
+  global_codex_mcp_configs:
+    enabled: true
+    description: "User-level Codex MCP server templates with placeholders"
+    sources:
+      - governance/global/codex/mcp/mcp-servers.json
+    target: "${USER_HOME}/.codex/mcp-configs/mcp-servers.json"
+    mode: replace
+
   workspace_config_claude:
     enabled: true
     description: "Claude Code workspace settings (enabled plugins)"
@@ -164,6 +192,14 @@ components:
     target_dir: "${WORKSPACE_ROOT}/.claude/env"
     mode: replace
 
+  global_claude_mcp_configs:
+    enabled: true
+    description: "User-level Claude MCP server templates with placeholders"
+    sources:
+      - governance/global/claude/mcp/mcp-servers.json
+    target: "${USER_HOME}/.claude/mcp-configs/mcp-servers.json"
+    mode: replace
+
   workspace_skills_lock:
     enabled: true
     description: "Pinned external workspace skill sources"
@@ -180,7 +216,7 @@ components:
     description: "User-authored Environment Correction + Issue Investigation Discipline"
     sources:
       - governance/global/claude/CLAUDE.md.partial.tmpl
-    target: "${HOME}/.claude/CLAUDE.md"
+    target: "${USER_HOME}/.claude/CLAUDE.md"
     mode: marker-section
     section_marker_start: "<!-- USER:CONSTITUTION:START"
     section_marker_end: "<!-- USER:CONSTITUTION:END -->"
@@ -193,7 +229,7 @@ components:
     description: "User-authored Codex home rules and superpowers activation policy"
     sources:
       - governance/global/codex/AGENTS.md.partial.tmpl
-    target: "${HOME}/.codex/AGENTS.md"
+    target: "${USER_HOME}/.codex/AGENTS.md"
     mode: marker-section
     section_marker_start: "<!-- USER:CONSTITUTION:START"
     section_marker_end: "<!-- USER:CONSTITUTION:END -->"

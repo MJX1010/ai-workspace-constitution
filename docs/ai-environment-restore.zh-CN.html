@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 环境备份与新机器恢复说明</title>
+  <style>
+    body{margin:0;font-family:"Microsoft YaHei","Segoe UI",Arial,sans-serif;background:#f6f7f9;color:#17202a;line-height:1.65}
+    main{max-width:1080px;margin:0 auto;padding:42px 28px 72px}
+    h1{font-size:34px;line-height:1.2;margin:0 0 10px}
+    h2{font-size:24px;margin:34px 0 12px;padding-top:10px;border-top:1px solid #d8dee8}
+    h3{font-size:18px;margin:22px 0 8px}
+    p{margin:10px 0}
+    code{font-family:Consolas,"Cascadia Mono","Courier New",monospace;background:#eef3f8;padding:1px 5px;border-radius:4px}
+    pre{overflow:auto;background:#101827;color:#e8eef7;padding:16px;border-radius:6px;font-size:13px;line-height:1.5}
+    pre code{background:transparent;color:inherit;padding:0}
+    .lead{color:#5c6675;margin-bottom:24px}
+    .callout{border-left:4px solid #0b6b62;background:#edf8f6;padding:12px 16px;margin:16px 0}
+    .warn{border-left-color:#9b3d21;background:#fff5ed}
+    table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d8dee8;margin:14px 0}
+    th,td{border:1px solid #d8dee8;padding:10px 12px;text-align:left;vertical-align:top}
+    th{background:#eef3f7}
+  </style>
+</head>
+<body>
+<main>
+  <h1>AI 环境备份与新机器恢复说明</h1>
+  <p class="lead">适用范围：Claude Code、Codex、MCP、plugins、skills、agents、superpowers，以及 D:\Projects 工作区治理。</p>
+
+  <h2>1. 备份边界</h2>
+  <div class="callout">本仓库备份的是可复用配置和恢复清单，不备份真实凭证。</div>
+  <table>
+    <thead><tr><th>进入 Git</th><th>不进入 Git</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Codex agents、非 .system skills、MCP 模板、Claude 插件清单、脱敏配置快照、superpowers 版本和 skill 列表。</td>
+        <td>auth、credentials、真实 token/key/secret/password、session、history、logs、cache、SQLite、插件缓存整包。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2. 新机器恢复顺序</h2>
+  <pre><code>git clone https://github.com/MJX1010/ai-workspace-constitution.git D:\Projects\ai-workspace-constitution
+cd D:\Projects\ai-workspace-constitution
+$env:WORKSPACE_ROOT = "D:\Projects"
+.\scripts\install.ps1 --workspace-root $env:WORKSPACE_ROOT --yes
+.\scripts\verify.ps1 --workspace-root $env:WORKSPACE_ROOT</code></pre>
+  <div class="callout warn"><code>--workspace-root</code> 只控制工作区目标；全局 Codex/Claude 目标默认写入当前用户 HOME。演练或测试必须同时覆盖 <code>--user-home</code>。</div>
+  <pre><code>$tmp = Join-Path $env:TEMP "ai-constitution-smoke"
+.\scripts\install.ps1 --workspace-root $tmp --user-home (Join-Path $tmp "home") --yes --verbose
+.\scripts\verify.ps1 --workspace-root $tmp</code></pre>
+  <p>安装器会恢复工作区治理入口、workspace skills、Codex 全局 agents、Codex 全局非 .system skills、Codex/Claude MCP placeholder 配置、Claude env 恢复说明和 skills-lock.json。</p>
+
+  <h2>3. 需要手动完成的内容</h2>
+  <h3>Claude Code</h3>
+  <p>重新登录或重新配置 provider token。参考 <code>settings.redacted.json</code> 恢复模型名、hooks、插件启用状态；参考插件清单安装 marketplace 和 plugin。</p>
+  <pre><code>/plugin marketplace add &lt;marketplace&gt;
+/plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code></pre>
+  <div class="callout warn">不要复制旧机器的 settings.json 原文；其中可能包含真实鉴权 token。</div>
+
+  <h3>Codex</h3>
+  <p>重新登录 Codex。按 <code>config.redacted.toml</code> 复核模型 provider、MCP server、plugin 启用状态。machine-specific runtime 路径、native pipe、hook trusted hash 不跨机器复用。</p>
+
+  <h3>MCP</h3>
+  <p><code>mcp-servers.json</code> 中的 <code>YOUR_*_HERE</code> 是占位符。新机器需要按实际账号填入环境变量或本机 secret manager，不要把真实值写回 Git。</p>
+
+  <h3>superpowers</h3>
+  <p><code>codex-superpowers-package.json</code> 记录 Codex 侧版本；<code>codex-superpowers-skills.txt</code> 记录当前 skill 列表。恢复时优先使用官方安装方式，再应用工作区 whitelist。</p>
+
+  <h2>4. 验证</h2>
+  <pre><code>.\scripts\verify.ps1 --workspace-root D:\Projects
+codex mcp list</code></pre>
+
+  <h2>5. 安全检查</h2>
+  <pre><code>rg -n "tp-[A-Za-z0-9]|sk-[A-Za-z0-9]|api[_-]?key\s*[=:]|secret\s*[=:]|password\s*[=:]|authorization\s*[=:]" governance docs manifests</code></pre>
+  <p>命中示例、占位符或安全说明可以保留；真实 token、key、cookie、session 必须删除并轮换。</p>
+</main>
+</body>
+</html>

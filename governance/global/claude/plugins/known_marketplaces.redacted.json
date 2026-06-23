@@ -1,0 +1,58 @@
+{
+    "claude-plugins-official":  {
+                                    "source":  {
+                                                   "source":  "github",
+                                                   "repo":  "anthropics/claude-plugins-official"
+                                               },
+                                    "installLocation":  "${HOME}\\.claude\\plugins\\marketplaces\\claude-plugins-official",
+                                    "lastUpdated":  "2026-06-17T02:18:55.972Z"
+                                },
+    "thedotmack":  {
+                       "source":  {
+                                      "source":  "github",
+                                      "repo":  "thedotmack/claude-mem"
+                                  },
+                       "installLocation":  "${HOME}\\.claude\\plugins\\marketplaces\\thedotmack",
+                       "lastUpdated":  "2026-02-27T03:03:21.142Z"
+                   },
+    "memsearch-plugins":  {
+                              "source":  {
+                                             "source":  "github",
+                                             "repo":  "zilliztech/memsearch"
+                                         },
+                              "installLocation":  "${HOME}\\.claude\\plugins\\marketplaces\\memsearch-plugins",
+                              "lastUpdated":  "2026-03-10T11:21:11.038Z"
+                          },
+    "ecc":  {
+                "source":  {
+                               "source":  "github",
+                               "repo":  "affaan-m/everything-claude-code"
+                           },
+                "installLocation":  "${HOME}\\.claude\\plugins\\marketplaces\\ecc",
+                "lastUpdated":  "2026-04-10T08:59:42.979Z"
+            },
+    "claude-code-lsps":  {
+                             "source":  {
+                                            "source":  "github",
+                                            "repo":  "Piebald-AI/claude-code-lsps"
+                                        },
+                             "installLocation":  "${HOME}\\.claude\\plugins\\marketplaces\\claude-code-lsps",
+                             "lastUpdated":  "2026-04-10T09:37:25.975Z"
+                         },
+    "omc":  {
+                "source":  {
+                               "source":  "git",
+                               "url":  "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
+                           },
+                "installLocation":  "${HOME}\\.claude\\plugins\\marketplaces\\omc",
+                "lastUpdated":  "2026-04-10T09:52:57.801Z"
+            },
+    "agentmemory":  {
+                        "source":  {
+                                       "source":  "github",
+                                       "repo":  "rohitg00/agentmemory"
+                                   },
+                        "installLocation":  "${HOME}\\.claude\\plugins\\marketplaces\\agentmemory",
+                        "lastUpdated":  "2026-06-01T07:26:45.745Z"
+                    }
+}

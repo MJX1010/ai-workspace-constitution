@@ -20,7 +20,16 @@ These are user-authored, reusable, and safe to version:
 - `governance/workspace-scripts/codex/manage-superpowers.bat`
 - `governance/project-overlays/DragonPow2/**`
 - `governance/global/claude/CLAUDE.md.partial.tmpl`
+- `governance/global/claude/mcp/mcp-servers.json`
+- `governance/global/claude/plugins/*.redacted.json`
+- `governance/global/claude/settings/*.redacted.json`
 - `governance/global/codex/AGENTS.md.partial.tmpl`
+- `governance/global/codex/agents/**`
+- `governance/global/codex/config/config.redacted.toml`
+- `governance/global/codex/mcp/mcp-servers.json`
+- `governance/global/codex/skills/**`
+- `governance/global/superpowers/**`
+- `governance/environment-inventory/*.redacted.json`
 - `manifests/default.yaml`
 - `manifests/machine.example.yaml`
 - `manifests/skills-lock.json`
@@ -46,6 +55,10 @@ The installer writes the synced sources to these target paths:
 - `${WORKSPACE_ROOT}/.codex/scripts/manage-superpowers.bat`
 - `${WORKSPACE_ROOT}/.claude/env/**`
 - `${WORKSPACE_ROOT}/skills-lock.json`
+- `${HOME}/.codex/agents/**`
+- `${HOME}/.codex/skills/**` except bundled `.system`
+- `${HOME}/.codex/mcp-configs/mcp-servers.json`
+- `${HOME}/.claude/mcp-configs/mcp-servers.json`
 - `${DRAGONPOW2_ROOT}/AGENTS.md`
 - `${DRAGONPOW2_ROOT}/CLAUDE.md`
 - `${DRAGONPOW2_ROOT}/governance/agent-docs/**`
@@ -62,6 +75,8 @@ repo-owned overlays:
 - `${HOME}/.claude/.credentials.json`
 - `${HOME}/.codex/auth.json`
 - `${HOME}/.codex/cap_sid`
+- `${HOME}/.claude/settings.json` raw values, especially auth tokens and provider secrets
+- `${HOME}/.codex/config.toml` raw machine runtime paths, native pipe IDs, hook trust state, and provider-local state
 - `${HOME}/.claude/sessions/**`, `${HOME}/.codex/sessions/**`
 - `${HOME}/.claude/history.jsonl`, `${HOME}/.codex/history.jsonl`
 - `${HOME}/.claude/cache/**`, `${HOME}/.codex/log/**`
@@ -76,6 +91,7 @@ repo-owned overlays:
 - `${HOME}/.claude/ecc/**`
 - `${HOME}/.claude/.omc/**`
 - `${HOME}/.codex/superpowers/**`
+- `${HOME}/.codex/skills/.system/**`
 - `${HOME}/.agents/skills/superpowers/**`
 - repository-local `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.codex/**`, and `.claude/**` under child repos, unless a specific repo overlay is explicitly declared under `governance/project-overlays/`
 - any `machine.local.yaml`, `.env*`, `*.key`, `*.pem`, backup, cache, or generated state file

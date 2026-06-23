@@ -1,0 +1,6 @@
+interface:
+  display_name: "DragonPow2 Docker Deploy"
+  short_description: "Rebuild and verify the DragonPow2 server Docker image."
+  default_prompt: "Use $dragonpow2-docker-deploy to rebuild and verify the DragonPow2 server Docker image."
+policy:
+  allow_implicit_invocation: true

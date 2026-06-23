@@ -1,0 +1,160 @@
+model_provider = "cch_codex_codex"
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+disable_response_storage = true
+
+notify = [ "C:\\Users\\Admin\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\a89897d3d9baa117\\bin\\node_modules\\@oai\\sky\\bin\\windows\\codex-computer-use.exe", "turn-ended" ]
+[model_providers.cch_codex_codex]
+name = "cch_codex_codex"
+base_url = "https://cch-cattrick.kxg.bytedance.net/v1"
+wire_api = "responses"
+requires_openai_auth = true
+
+[projects.'${WORKSPACE_ROOT}\dragonpow2\dragonpow2_trunk_leaning']
+trust_level = "trusted"
+
+[projects.'${WORKSPACE_ROOT}\dragonpow2']
+trust_level = "trusted"
+
+[projects.'${WORKSPACE_ROOT}']
+trust_level = "trusted"
+
+[projects.'${WORKSPACE_ROOT}\dragonpow2\dragonpow2_trunk']
+trust_level = "trusted"
+
+[projects.'${WORKSPACE_ROOT}\dragonpow2\trunk\client\unity']
+trust_level = "trusted"
+
+[marketplaces.openai-bundled]
+last_updated = "2026-06-18T03:33:36Z"
+source_type = "local"
+source = '\\?\${HOME}\.codex\.tmp\bundled-marketplaces\openai-bundled'
+
+[marketplaces.agentmemory]
+last_updated = "2026-06-12T11:58:16Z"
+last_revision = "f6f9e3cb1385da31f48036868dc3c7fe342b67ba"
+source_type = "git"
+source = "https://github.com/rohitg00/agentmemory.git"
+
+[features]
+hooks = true
+js_repl = false
+
+unified_exec = true
+[mcp_servers.node_repl]
+args = []
+command = '${HOME}\AppData\Local\OpenAI\Codex\runtimes\cua_node\a89897d3d9baa117\bin\node_repl.exe'
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = '${HOME}\AppData\Local\OpenAI\Codex\runtimes\cua_node\a89897d3d9baa117\bin\node_modules'
+NODE_REPL_NODE_PATH = '${HOME}\AppData\Local\OpenAI\Codex\runtimes\cua_node\a89897d3d9baa117\bin\node.exe'
+NODE_REPL_TRUSTED_CODE_PATHS = '${HOME}\.codex'
+CODEX_HOME = '${HOME}\.codex'
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "099cb5ac09333da8389063d49d03a7e277fc87d858b0526a538f0871af93bf68,bdc61752e0f9d9b1e73e3cba25ca71d3d9fe54d335ed8196378106081474d7c1"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.611.61753"
+SKY_CUA_NATIVE_PIPE = "1"
+SKY_CUA_NATIVE_PIPE_DIRECTORY = '<CODEX_COMPUTER_USE_PIPE>'
+CODEX_CLI_PATH = '${HOME}\AppData\Local\OpenAI\Codex\bin\330bd0cba6496126\codex.exe'
+
+[windows]
+sandbox = "elevated"
+
+[hooks.state]
+
+[hooks.state.'${HOME}\.codex\hooks.json:pre_tool_use:0:0']
+trusted_hash = "sha256:0383d9a579cf6f0996635818a984564272a04f182f10a34ee75a6ff85920fa13"
+
+[hooks.state.'${HOME}\.codex\hooks.json:pre_tool_use:1:0']
+trusted_hash = "sha256:732fde5fda1f8614bea117d12e11e514886941f69983a714aefa63dd61d8fb7a"
+
+[hooks.state.'${HOME}\.codex\hooks.json:permission_request:0:0']
+trusted_hash = "sha256:a66611dad741cbf38361111b41f6b50a965487323016dc565230c4ed03bcd419"
+
+[hooks.state.'${HOME}\.codex\hooks.json:post_tool_use:0:0']
+trusted_hash = "sha256:831483445ef9606c38c2a3aa53f866d385f04d5a0d5810227f661704fb1a7c7f"
+
+[hooks.state.'${HOME}\.codex\hooks.json:post_tool_use:1:0']
+trusted_hash = "sha256:8e35a239c18a8f43914bd986a2b390592aac8b9e86c4c92914ad9eda88688add"
+
+[hooks.state.'${HOME}\.codex\hooks.json:session_start:0:0']
+trusted_hash = "sha256:a23b201171c71671c9f9e17118bc3aa93a4b21c02938f54d51e8c5ab69eec095"
+
+[hooks.state.'${HOME}\.codex\hooks.json:session_start:1:0']
+trusted_hash = "sha256:dd23604ea4b2213aeb5d17ec03b20489f5a3410414a5eccc04ba4c047a3c0657"
+
+[hooks.state.'${HOME}\.codex\hooks.json:user_prompt_submit:0:0']
+trusted_hash = "sha256:c78477de5dee20fee824648be9011640826a9ba2a070a60d80b3c8863b9663de"
+
+[hooks.state.'${HOME}\.codex\hooks.json:user_prompt_submit:1:0']
+trusted_hash = "sha256:49edf51391f6fdb964c7dcb89a7035771ee37eb02f2dbf2fd3a94f5365a42577"
+
+[hooks.state.'${HOME}\.codex\hooks.json:stop:0:0']
+trusted_hash = "sha256:7bd873b441aa74ebcc10264620918873c295a964b638a4ddcddfa97e0331f35e"
+
+[hooks.state.'${HOME}\.codex\hooks.json:stop:1:0']
+trusted_hash = "sha256:a55d26c3b53949aff73c7942a20d2d879bb801a2d4d19903e44be18da95217aa"
+
+[hooks.state.'${HOME}\.codex\hooks.json:pre_tool_use:2:0']
+trusted_hash = "sha256:91aa58f5195ffb4c3ec39fd6f5abf63a8c5d2b3498d035a4502b4b4359b68431"
+
+[hooks.state.'${HOME}\.codex\hooks.json:post_tool_use:2:0']
+trusted_hash = "sha256:4f10c016a1abeb12b80279f93ddfdf0deff71a91c6df919a740cf9b6fc54135c"
+
+[hooks.state.'${HOME}\.codex\hooks.json:pre_compact:0:0']
+trusted_hash = "sha256:b0679de9939e5a876c3e24fbbd0df8d41eddf4e08b50c7167cd6fd5f1a2f248e"
+
+[hooks.state.'${HOME}\.codex\hooks.json:session_start:2:0']
+trusted_hash = "sha256:3527f4a1245313ee5adedd6cd5ba07ab546d9ed9b907af22fdf1866bc6b0ce75"
+
+[hooks.state.'${HOME}\.codex\hooks.json:user_prompt_submit:2:0']
+trusted_hash = "sha256:32e61356c418de8091e672ca85096fdee09464209fabdc11ee8f379cd3c43630"
+
+[hooks.state.'${HOME}\.codex\hooks.json:stop:2:0']
+trusted_hash = "sha256:76f7d536d485c88c124b43e0875f6a6641460875937849af8eee2799bf1cf000"
+
+[hooks.state."agentmemory@agentmemory:hooks/hooks.codex.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:72fade31ac7a95e92bef200e83eae770f6961a9f6ff9f12596c3bccc1dfc566e"
+
+[hooks.state."agentmemory@agentmemory:hooks/hooks.codex.json:post_tool_use:0:0"]
+trusted_hash = "sha256:1b8a64f14c07f7f42d9e22ba4b4907027dbd7e4dc5d4db6c34c53b9263b2620b"
+
+[hooks.state."agentmemory@agentmemory:hooks/hooks.codex.json:pre_compact:0:0"]
+trusted_hash = "sha256:2d124c2cc70523587a243fb166c16aa343b2fca616fd9f77bd44ab74a75bcfae"
+
+[hooks.state."agentmemory@agentmemory:hooks/hooks.codex.json:session_start:0:0"]
+trusted_hash = "sha256:7b09a5a4e6f0bd5f6c7441a26e91fd060c1b4481028cc26aded89331ef90a8b0"
+
+[hooks.state."agentmemory@agentmemory:hooks/hooks.codex.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:8f9e09b1ebf8c8b80a16c1c50203868d851c33942ce8e7cc1b26c4e4b6de891d"
+
+[hooks.state."agentmemory@agentmemory:hooks/hooks.codex.json:stop:0:0"]
+trusted_hash = "sha256:b9dfa7fe6d1c0cb5d9c539f73f44f7239043bfc2751126c317360b1dde249a3a"
+
+[hooks.state.'${WORKSPACE_ROOT}\DragonPow2\Trunk\client\Unity\.codex\hooks.json:stop:0:0']
+trusted_hash = "sha256:71b9142d0ecba4401ea5875390af9a0f5e955c906d4f9f44378ab05e9a92d675"
+
+[plugins."agentmemory@agentmemory"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[tui.model_availability_nux]
+"gpt-5.5" = 3
+
+[mcp_servers.agentmemory]
+command = "npx"
+args = ["-y", "@agentmemory/mcp"]
+
+[mcp_servers.agentmemory.env]
+AGENTMEMORY_URL = "http://localhost:3111"
+
+[mcp_servers.codegraph]
+command = "codegraph"
+args = ["serve", "--mcp"]

@@ -26,6 +26,9 @@ Entries are grouped under these section headings (in order):
 - `governance/workspace-skills/shared/karpathy-guidelines/` for lightweight coding/review/refactor behavior guardrails.
 - `governance/workspace-config/claude-env/` for Claude plugin/settings recovery notes and scripts.
 - `manifests/skills-lock.json` to pin external workspace skill sources and hashes.
+- `governance/global/codex/agents/` and `governance/global/codex/skills/` for user-level Codex agent/skill snapshots, excluding bundled `.system` skills.
+- `governance/global/{codex,claude}/mcp/mcp-servers.json` for MCP server templates with placeholders.
+- Redacted Claude/Codex environment snapshots under `governance/global/` and `governance/environment-inventory/`.
 - `docs/sync-scope.md` documenting synced paths, materialised targets, and deliberately ignored local/plugin/runtime surfaces.
 - Chinese workspace structure and Agent Git-management inventory documents under `docs/`.
 
@@ -37,6 +40,7 @@ Entries are grouped under these section headings (in order):
 - `manifests/default.yaml` now installs the DragonPow2 overlay to `${DRAGONPOW2_ROOT}`, defaulting to `${WORKSPACE_ROOT}/DragonPow2`.
 - `manifests/default.yaml` now installs the Codex global marker section, Codex helper scripts, and the shared `github-sync-commit` skill.
 - `manifests/default.yaml` now mirrors shared workspace skills into `.agents/skills` as well as Codex and Claude skill directories.
+- `manifests/default.yaml` now restores user-level Codex agents, non-system Codex skills, and MCP config templates on new machines.
 - `.gitignore` now excludes common AI harness runtime state if it is accidentally copied into the constitution repo.
 
 ## [0.2.0] - 2026-05-11
