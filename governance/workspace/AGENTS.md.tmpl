@@ -16,6 +16,8 @@
 
 用户在当前对话 session 中声明了具体工程路径时，必须先规范化为绝对路径并把它当作本轮目标根目录；环境探测、VCS、构建、代码生成、review 和文档同步命令默认从该根目录或其明确子目录执行。不要凭目录名猜测或拼出其它工程根，例如把 `<用户声明的工程根>` 误当成 `<工作区根>\Trunk`。只有在维护顶层治理文件或共享 specs/skills 时，才回到 `${WORKSPACE_ROOT}`。
 
+新 session 开始或用户重新指定工程路径时，必须判断该路径是否为工程根目录：优先看 `.git` / `.svn`，其次看 Unity `Assets` + `ProjectSettings`、`.sln` / `.csproj`、`package.json`、`pyproject.toml`、`Cargo.toml` 等根标志。若确认是工程根且 codegraph 可用，未初始化则先 `codegraph init`，已有索引则刷新/更新索引，并确认新改动文件已进入索引；若只能访问 codegraph 查询工具，则用 `codegraph_status` / `codegraph_explore` 确认索引状态。codegraph 不可用、索引过期或不支持当前语言时，必须说明降级，并用 `rg`、语言服务、编译/测试和项目本地 review gate 补足影响面检查。
+
 动手前先确认：
 
 1. 目标仓库

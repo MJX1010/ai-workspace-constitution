@@ -68,3 +68,4 @@ shell-snapshots/
 .sandbox/
 .sandbox-bin/
 .sandbox-secrets/
+.codegraph/
