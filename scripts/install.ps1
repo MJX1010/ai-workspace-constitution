@@ -9,6 +9,9 @@
 
 .EXAMPLE
   .\scripts\install.ps1 --workspace-root D:\projects\agents --dry-run
+
+.EXAMPLE
+  .\scripts\install.ps1 --workspace-root D:\projects\agents --user-home D:\tmp\home --dry-run
 #>
 [CmdletBinding()]
 param(

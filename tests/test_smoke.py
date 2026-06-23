@@ -101,6 +101,26 @@ class TestInstallSmoke(unittest.TestCase):
         self.assertEqual(r.returncode, 0, msg=r.stdout + r.stderr)
         self.assertIn(str(self.target / "DragonPow2" / "AGENTS.md"), r.stdout)
 
+    def test_cli_user_home_isolates_global_targets(self):
+        fake_home = self.target / "isolated-home"
+        r = run_module(
+            "install",
+            "--workspace-root",
+            str(self.target),
+            "--user-home",
+            str(fake_home),
+            "--dry-run",
+            "--verbose",
+            env={
+                "WORKSPACE_ROOT": "",
+                "HOME": str(self.target / "real-home-not-used"),
+                "USERPROFILE": str(self.target / "real-profile-not-used"),
+            },
+        )
+        self.assertEqual(r.returncode, 0, msg=r.stdout + r.stderr)
+        self.assertIn(str(fake_home / ".codex" / "agents"), r.stdout)
+        self.assertIn(str(fake_home / ".claude" / "CLAUDE.md"), r.stdout)
+
     def test_idempotent_reinstall(self):
         r1 = run_module("install", "--yes", env=self._env())
         self.assertEqual(r1.returncode, 0)

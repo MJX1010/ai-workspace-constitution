@@ -41,6 +41,11 @@ def parse_args() -> argparse.Namespace:
         help="Override $WORKSPACE_ROOT (the target workspace path).",
     )
     p.add_argument(
+        "--user-home",
+        default=None,
+        help="Override $HOME / ${USER_HOME} for global user-level targets.",
+    )
+    p.add_argument(
         "--manifest",
         default=None,
         help="Path to default manifest (defaults to manifests/default.yaml).",
@@ -200,6 +205,10 @@ def main() -> int:
     cli_overrides: Dict[str, str] = {}
     if args.workspace_root:
         cli_overrides["WORKSPACE_ROOT"] = args.workspace_root
+    if args.user_home:
+        cli_overrides["HOME"] = args.user_home
+        cli_overrides["USER_HOME"] = args.user_home
+        cli_overrides["USERPROFILE"] = args.user_home
 
     manifest_path = (
         Path(args.manifest) if args.manifest
