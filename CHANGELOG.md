@@ -35,6 +35,7 @@ Entries are grouped under these section headings (in order):
 - Chinese workspace structure and Agent Git-management inventory documents under `docs/`.
 
 ### Changed
+- 工作区与 DragonPow2 overlay 同步当前 live 治理规则，新增按改动风险收敛上下文读取、精确搜索、验证闭环和阶段说明的约束，并将平台/Profile/宏矩阵验证限制为仅在明确触发条件下扩展。
 - 工作区 AGENTS/CLAUDE 约束 Paseo 本地文件链接不得把行号写入 Markdown target，避免 Windows 将行号后缀当作文件名并触发 `ENOENT`。
 - 工作区 handoff 统一落到 `${WORKSPACE_ROOT}/ai_handoff/<项目_模块_用途_日期>/`，并明确覆盖通用 handoff skill 的系统临时目录默认值。
 - DragonPow2 skill authoring rules now require Chinese `SKILL.md` trigger descriptions and relative or placeholder paths instead of machine-local absolute project paths.
