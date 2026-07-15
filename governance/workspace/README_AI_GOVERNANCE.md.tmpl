@@ -1,83 +1,83 @@
-# AI Governance Overview
+# AI 治理概览
 
-This document is a human-facing overview of AI governance for `${WORKSPACE_ROOT}`.
+本文件是 `${WORKSPACE_ROOT}` 工作区治理的人类可读概览，不是最高优先级规则源。实际执行以当前对话、最近规则文件和本地 skills 为准。
 
-It is not the primary rule source.
-Canonical rule priority is:
+## 优先级
 
-1. system or developer instructions
-2. user request
-3. nearest `AGENTS.md`
-4. parent `AGENTS.md`
-5. local skills
+1. system / developer 指令
+2. 用户当前要求
+3. 最近目录的 `AGENTS.md` / `CLAUDE.md` / `GEMINI.md`
+4. 父级规则文件
+5. 被触发的本地 skills 及其引用
 
-## What This Layer Is For
+## 本层职责
 
-The `${WORKSPACE_ROOT}` layer exists to define shared governance across multiple repositories.
+`${WORKSPACE_ROOT}` 是多仓库工作区，顶层治理只放跨仓库稳定适用的规则。
 
-It is for:
+适合放在本层：
 
-- top-level instruction hierarchy
-- cross-repo agent behavior defaults
-- generic `AI Vibe Coding` guardrails
-- reusable skill-creation and governance workflows
+- 规则优先级和上下文发现方式
+- 跨仓库默认行为
+- 通用 AI coding guardrails
+- 可复用 skill 创建、维护和治理流程
+- 编码、提交、发布前的通用安全边界
 
-It is not for:
+不适合放在本层：
 
-- one repository's internal architecture
-- one framework's code placement rules
-- feature-specific implementation guidance
+- 单一仓库的内部架构
+- 单一框架的代码放置规则
+- 单个 feature 的实现说明
+- 高频变化的临时 workaround
 
-## Current Governance Files
+## 当前治理文件
 
-- `AGENTS.md`
-- `CLAUDE.md`
-- `GEMINI.md`
+- `AGENTS.md`：Codex / 通用 agent 顶层入口
+- `CLAUDE.md`：Claude 兼容顶层入口
+- `GEMINI.md`：Gemini 兼容顶层入口
 - `.codex/config.toml`
 - `.codex/skills/workspace-governance/`
 - `.codex/skills/skill-factory-playbook/`
 - `.claude/skills/workspace-governance/`
 - `.claude/skills/skill-factory-playbook/`
 
-## Overlay Model
+## 覆盖模型
 
-Each repository may add its own overlay.
+每个子仓库可以有自己的局部规则。更近的规则用于补充或收窄顶层规则，但不应把个人偏好复制到更深目录。
 
-Example:
+示例：
 
-- `${WORKSPACE_ROOT}/DragonPow2/DragonPow2_Trunk/client/AGENTS.md`
+- `${WORKSPACE_ROOT}\DragonPow2\AGENTS.md`
+- `${WORKSPACE_ROOT}\lqs_automation\AGENTS.md`
+- `${WORKSPACE_ROOT}\ai_projects\AGENTS.md`
 
-That repo-level file should inherit this top-level layer and then add project-specific constraints.
+仓库级规则应继承顶层工作区规则，并只添加项目事实、验证路径、source of truth 和本地风险边界。
 
-## Core Principles
+## 核心原则
 
-### Closest Rule Wins
+### 最近规则优先
 
-More local instructions override broader ones.
+更靠近目标文件或目标项目的规则优先于更宽泛的顶层规则。
 
-### Source of Truth First
+### 先找 source of truth
 
-Modify the true source, not the nearest derived artifact.
+修改真正来源，不直接修改可再生成的派生产物。
 
-### Ownership Before Edits
+### 先确认归属再动手
 
-Identify repo, module, dependency direction, and validation path before substantial edits.
+较大改动前确认目标仓库、归属模块、依赖方向和验证路径。
 
-### Minimal but Complete Changes
+### 小而完整
 
-Include implementation, required sync points, knowledge updates, and validation.
+改动应覆盖必要闭环：实现、同步点、知识沉淀和验证。避免无关格式化、重生成或批量扫改。
 
-### Durable Knowledge Must Be Captured
+### 稳定知识要沉淀
 
-Stable discoveries should be written back into local skills or governance docs.
+发现可复用规则、坑点或工作流时，写回最近合适的治理文件或 skill。
 
-## Constitution Source
+## Constitution 来源
 
-This workspace's governance is materialised by the **AI Workspace Constitution** repo.
+本工作区治理长期由 **AI Workspace Constitution** 仓库生成和同步。
 
-If you need to update these rules across all your machines, edit the templates in
-`<constitution-repo>/governance/workspace/*.tmpl`, commit, push, and run `update.sh`
-on each target machine.
+若要跨机器长期同步规则，优先修改 constitution 仓库中的模板，例如 `<constitution-repo>/governance/workspace/*.tmpl`，再运行对应同步脚本。
 
-Do **not** edit the rendered files in `${WORKSPACE_ROOT}` directly — drift will be
-detected by `verify.sh` on the next run.
+当前对话中用户明确要求维护 `${WORKSPACE_ROOT}` 渲染文件时，可以直接修改本地文件；但若这些规则需要长期保留并跨机器同步，后续仍应回写到 constitution 模板，避免下次同步产生漂移。

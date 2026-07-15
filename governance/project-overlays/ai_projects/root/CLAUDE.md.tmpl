@@ -1,0 +1,52 @@
+# Claude 工作区指令
+
+工作区路径：`${AI_PROJECTS_ROOT}`
+
+本文件承接工作区顶层 `CLAUDE.md` 与 `AGENTS.md` 的通用规则；子目录若有更近的 `AGENTS.md` / `CLAUDE.md`，以更近规则为准。
+
+## 多仓库工作区约定
+
+每个子目录是独立仓库，不共享架构和依赖。操作前先确认：
+1. 目标仓库
+2. 最近的规则文件（子目录的 CLAUDE.md 优先于本文件）
+3. 验证路径
+
+## Skills（可复用模式）
+
+工作区级别的可复用技能在 `.skills/` 目录：
+
+| 目录 | 适用场景 |
+|---|---|
+| [`.skills/wechat-article-fetcher/`](.skills/wechat-article-fetcher/) | 获取微信公众号文章内容，支持提取正文、标题、作者等信息 |
+| [`.skills/loop-engineering/`](.skills/loop-engineering/) | Loop Engineering 框架，用于设计自动循环系统让 Agent 自己跑 |
+
+## Loop Engineering 流程
+
+Loop Engineering 详细说明由 `loop-engineering/` 目录维护。需要搭建自动循环时，先阅读：
+
+- `loop-engineering/README.md`
+- `loop-engineering/quick-start.md`
+- `loop-engineering/start-loop.md`
+- `loop-engineering/templates/`
+
+只有任务高频重复、结果可自动验证、token 预算可控且 agent 工具链足够时，才设计自动循环；普通一次性任务不要引入 loop。
+
+## 项目清单
+
+| 目录 | 说明 | 仓库 |
+|---|---|---|
+| `ai-orchestrator-desktop/` | AI 插件管理桌面应用（Tauri 2 + Rust + React） | `MJX1010/ai-orchestrator-desktop`（私有） |
+| `AI_Plugins/` | 插件配置数据仓库 | `MJX1010/AI_Plugins`（公开） |
+| `skillvault/` | 技能管理工具 | - |
+| `everything-claude-code/` | Claude Code 参考资料 | - |
+| `YIUI-UnityMCP/` | Unity MCP 集成 | - |
+| `AIHubMix_Py/` | AIHubMix Python 工具 | - |
+| `waveterm/` | Waveterm 终端 | - |
+| `loop-engineering/` | Loop Engineering 框架，用于设计自动循环系统让 Agent 自己跑 | - |
+
+## 核心约束
+
+- 不跨仓库做未经确认的批量修改
+- 生成产物（dist、target、codegen 结果）视为只读
+- 敏感信息不写入任何仓库（token、密钥、个人路径酌情处理）
+- 首选简体中文 + 英文技术术语

@@ -11,3 +11,20 @@ project_doc_max_bytes = 65536
 
 [windows]
 sandbox = "elevated"
+
+# BEGIN WORKSPACE CODEX AGENT CONFIG
+[features]
+multi_agent = true
+
+[agents]
+max_threads = 2
+max_depth = 1
+
+[agents.repo_explorer]
+description = "只读调查任务书指定的单一工程，自行读取局部上下文，只返回精简证据摘要。"
+config_file = "agents/repo-explorer.toml"
+
+[agents.repo_worker]
+description = "执行任务书指定的单一工程改动，自行读取局部上下文，只向主 Agent 返回精简结果。"
+config_file = "agents/repo-worker.toml"
+# END WORKSPACE CODEX AGENT CONFIG

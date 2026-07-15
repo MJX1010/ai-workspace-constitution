@@ -11,6 +11,8 @@ paths:
   workspace_root: "/Users/me/projects/agents"
   # Override when DragonPow2 is not located at ${WORKSPACE_ROOT}/DragonPow2.
   dragonpow2_root: "/Users/me/projects/agents/DragonPow2"
+  # Override or disable ai_projects_root_agent_docs when ai_projects is absent.
+  ai_projects_root: "/Users/me/projects/agents/ai_projects"
 
 components:
   # Disable Windows-only skill on macOS / Linux.
@@ -18,6 +20,10 @@ components:
     enabled: false
   workspace_scripts_codex:
     enabled: false
+
+  # Disable project overlays that do not exist on this machine.
+  # ai_projects_root_agent_docs:
+  #   enabled: false
 
   # Example: skip Claude config on a machine that only uses Codex.
   # workspace_config_claude:

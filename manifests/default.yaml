@@ -26,6 +26,9 @@ paths:
   # Repo-owned overlay for the DragonPow2 multi-project workspace.
   # Override this in manifests/machine.local.yaml if the repo is not under WORKSPACE_ROOT.
   dragonpow2_root: "${WORKSPACE_ROOT}/DragonPow2"
+  # Workspace-owned overlay for the ai_projects multi-repo sandbox.
+  # Disable the ai_projects component in manifests/machine.local.yaml if absent on a machine.
+  ai_projects_root: "${WORKSPACE_ROOT}/ai_projects"
 
 components:
 
@@ -67,6 +70,16 @@ components:
     sources:
       - governance/project-overlays/DragonPow2/scripts/
     target_dir: "${DRAGONPOW2_ROOT}"
+    mode: replace
+
+  # ── ai_projects workspace overlay ─────────────────────────────────
+  ai_projects_root_agent_docs:
+    enabled: true
+    description: "ai_projects root AGENTS.md / CLAUDE.md overlay"
+    sources:
+      - governance/project-overlays/ai_projects/root/AGENTS.md.tmpl
+      - governance/project-overlays/ai_projects/root/CLAUDE.md.tmpl
+    target_dir: "${AI_PROJECTS_ROOT}"
     mode: replace
 
   # ── Workspace skills (Codex mirror) ────────────────────────────────
@@ -136,13 +149,32 @@ components:
     target_dir: "${WORKSPACE_ROOT}/.codex/scripts"
     mode: replace
 
+  workspace_codex_agent_governance_script:
+    enabled: true
+    description: "Generate and verify project-local Codex agent registration blocks"
+    os: [windows]
+    harness: [codex]
+    sources:
+      - governance/workspace-scripts/codex/sync-codex-agent-governance.ps1
+    target_dir: "${WORKSPACE_ROOT}/scripts"
+    mode: replace
+
   # ── Per-harness configs ────────────────────────────────────────────
   workspace_config_codex:
     enabled: true
-    description: "Codex workspace config (sandbox, project markers)"
+    description: "Codex workspace config (sandbox, project markers, bounded multi-agent roles)"
     sources:
       - governance/workspace-config/codex.config.toml.tmpl
     target: "${WORKSPACE_ROOT}/.codex/config.toml"
+    mode: replace
+
+  workspace_config_codex_agents:
+    enabled: true
+    description: "Workspace-local Codex roles for isolated single-project delegation"
+    sources:
+      - governance/workspace-config/codex-agents/repo-explorer.toml
+      - governance/workspace-config/codex-agents/repo-worker.toml
+    target_dir: "${WORKSPACE_ROOT}/.codex/agents"
     mode: replace
 
   # ── Global Codex reusable surfaces ─────────────────────────────────

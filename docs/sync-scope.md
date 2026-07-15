@@ -12,13 +12,16 @@ These are user-authored, reusable, and safe to version:
 - `governance/workspace/GEMINI.md.tmpl`
 - `governance/workspace/README_AI_GOVERNANCE.md.tmpl`
 - `governance/workspace-config/codex.config.toml.tmpl`
+- `governance/workspace-config/codex-agents/*.toml`
 - `governance/workspace-config/claude.settings.local.json.tmpl`
 - `governance/workspace-config/claude-env/**`
 - `governance/workspace-skills/shared/**`
 - `governance/workspace-skills/codex-only/manage-superpowers-whitelist/**`
 - `governance/workspace-scripts/codex/manage-superpowers.ps1`
 - `governance/workspace-scripts/codex/manage-superpowers.bat`
+- `governance/workspace-scripts/codex/sync-codex-agent-governance.ps1`
 - `governance/project-overlays/DragonPow2/**`
+- `governance/project-overlays/ai_projects/**`
 - `governance/global/claude/CLAUDE.md.partial.tmpl`
 - `governance/global/claude/mcp/mcp-servers.json`
 - `governance/global/claude/plugins/*.redacted.json`
@@ -47,12 +50,15 @@ The installer writes the synced sources to these target paths:
 - `${WORKSPACE_ROOT}/GEMINI.md`
 - `${WORKSPACE_ROOT}/README_AI_GOVERNANCE.md`
 - `${WORKSPACE_ROOT}/.codex/config.toml`
+- `${WORKSPACE_ROOT}/.codex/agents/repo-explorer.toml`
+- `${WORKSPACE_ROOT}/.codex/agents/repo-worker.toml`
 - `${WORKSPACE_ROOT}/.claude/settings.local.json`
 - `${WORKSPACE_ROOT}/.codex/skills/**`
 - `${WORKSPACE_ROOT}/.claude/skills/**`
 - `${WORKSPACE_ROOT}/.agents/skills/**`
 - `${WORKSPACE_ROOT}/.codex/scripts/manage-superpowers.ps1`
 - `${WORKSPACE_ROOT}/.codex/scripts/manage-superpowers.bat`
+- `${WORKSPACE_ROOT}/scripts/sync-codex-agent-governance.ps1`
 - `${WORKSPACE_ROOT}/.claude/env/**`
 - `${WORKSPACE_ROOT}/skills-lock.json`
 - `${HOME}/.codex/agents/**`
@@ -64,6 +70,8 @@ The installer writes the synced sources to these target paths:
 - `${DRAGONPOW2_ROOT}/governance/agent-docs/**`
 - `${DRAGONPOW2_ROOT}/scripts/sync-agent-docs.ps1`
 - `${DRAGONPOW2_ROOT}/scripts/check-agent-docs.ps1`
+- `${AI_PROJECTS_ROOT}/AGENTS.md`
+- `${AI_PROJECTS_ROOT}/CLAUDE.md`
 - `${HOME}/.claude/CLAUDE.md` between `<!-- USER:CONSTITUTION:START -->` and `<!-- USER:CONSTITUTION:END -->`
 - `${HOME}/.codex/AGENTS.md` between `<!-- USER:CONSTITUTION:START -->` and `<!-- USER:CONSTITUTION:END -->`
 
@@ -71,6 +79,8 @@ The installer writes the synced sources to these target paths:
 
 These are secrets, machine state, runtime artifacts, third-party installs, or
 repo-owned overlays:
+
+- `${WORKSPACE_ROOT}/lqs_automation/AGENTS.md` 与其子项目规则由对应仓库自行维护；Constitution 只提供顶层通用治理，不覆盖这些局部入口。
 
 - `${HOME}/.claude/.credentials.json`
 - `${HOME}/.codex/auth.json`

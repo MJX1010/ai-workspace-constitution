@@ -50,6 +50,12 @@ class TestInstallSmoke(unittest.TestCase):
         self.assertTrue((self.target / "GEMINI.md").exists())
         self.assertTrue((self.target / "README_AI_GOVERNANCE.md").exists())
         self.assertTrue((self.target / ".codex" / "config.toml").exists())
+        self.assertTrue(
+            (self.target / ".codex" / "agents" / "repo-explorer.toml").exists()
+        )
+        self.assertTrue(
+            (self.target / ".codex" / "agents" / "repo-worker.toml").exists()
+        )
         self.assertTrue((self.target / ".codex" / "AGENTS.md").exists())
         self.assertTrue(
             (self.target / ".codex" / "scripts" / "manage-superpowers.ps1").exists()
@@ -57,6 +63,9 @@ class TestInstallSmoke(unittest.TestCase):
         self.assertTrue(
             (self.target / ".codex" / "scripts" / "manage-superpowers.bat").exists()
         )
+        sync_script = self.target / "scripts" / "sync-codex-agent-governance.ps1"
+        self.assertTrue(sync_script.exists())
+        self.assertTrue(sync_script.read_bytes().startswith(b"\xef\xbb\xbf"))
         self.assertTrue(
             (self.target / ".codex" / "skills" / "workspace-governance" / "SKILL.md").exists()
         )
@@ -73,6 +82,22 @@ class TestInstallSmoke(unittest.TestCase):
         codex_agents = (self.target / ".codex" / "AGENTS.md").read_text(encoding="utf-8")
         self.assertIn("USER:CONSTITUTION:START", codex_agents)
         self.assertIn("Superpowers Activation Policy", codex_agents)
+        workspace_agents = (self.target / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("## SubAgent 派发边界", workspace_agents)
+        self.assertIn('fork_turns="none"', workspace_agents)
+        self.assertIn("## 会话切换与交接", workspace_agents)
+        dragon_common = (
+            self.target / "DragonPow2" / "governance" / "agent-docs" / "common.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("## 主 Agent、SubAgent 与会话隔离", dragon_common)
+        codex_config = (self.target / ".codex" / "config.toml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("multi_agent = true", codex_config)
+        self.assertIn("max_threads = 2", codex_config)
+        self.assertIn("max_depth = 1", codex_config)
+        self.assertIn('config_file = "agents/repo-explorer.toml"', codex_config)
+        self.assertIn('config_file = "agents/repo-worker.toml"', codex_config)
 
     def test_workspace_root_substituted(self):
         run_module("install", "--yes", env=self._env())
@@ -83,6 +108,14 @@ class TestInstallSmoke(unittest.TestCase):
         # The literal placeholder must NOT remain.
         self.assertNotIn("${WORKSPACE_ROOT}", text)
         self.assertNotIn("${WORKSPACE_NAME}", text)
+
+    def test_paseo_local_file_links_do_not_put_line_numbers_in_targets(self):
+        run_module("install", "--yes", env=self._env())
+        agents = (self.target / "AGENTS.md").read_text(encoding="utf-8")
+        claude = (self.target / "CLAUDE.md").read_text(encoding="utf-8")
+        rule = "Paseo 会将行号后缀当作文件名并导致 `ENOENT`"
+        self.assertIn(rule, agents)
+        self.assertIn(rule, claude)
 
     def test_cli_workspace_root_feeds_derived_paths(self):
         env = {

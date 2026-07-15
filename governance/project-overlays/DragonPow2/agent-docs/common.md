@@ -3,22 +3,32 @@
 - 首要使用中文与用户沟通；除非用户明确要求英文，最终回复、阶段性说明、设计分析和 review 结论都使用中文。
 - 新增或修改文档、代码注释、XML summary、README、架构说明时，优先使用中文描述。保留 API 名称、类型名、路径、命令和协议字段原文。
 - 面向团队沉淀的设计规范、迁移规则和边界说明必须写清楚中文上下文，避免只留下英文占位描述。
-- 在回复、阶段说明、文件清单和 review 结论中引用文件或目录时，必须展示完整绝对路径（例如 `D:\Projects\DragonPow2\DragonPow2_Trunk_Leaning\client\Unity\Assets\Scripts\Hotfix\Client\ClientMode\Game\Meta\Prop\Protocol\PropFormalProtocol.cs`），不要用省略号缩写中间层级，也不要只给相对片段，便于直接定位和点击打开。
+- 在 `AGENTS.md`、`CLAUDE.md`、skills、README 和架构文档中引用路径时，只使用相对路径或 `<工作区根>`、`<DragonPow2根目录>`、`<项目根目录>` 等语义占位符，不写入盘符、个人用户名或本机绝对路径。用户回复中如需可点击本地链接，在运行时解析实际路径，不把解析结果回写到治理文档。
 
 ## 跨目录协作上下文发现
 
-- 当从 `D:\Projects\DragonPow2` 顶层目录对 `D:\Projects\DragonPow2\DragonPow2_Trunk_Leaning`、`D:\Projects\DragonPow2\DragonPow2_Trunk_Leaning\client` 等子目录项目开展 AI agent 对话协作时，必须按“顶层目录 -> 项目根目录 -> 子模块目录 -> 目标文件所在目录”的顺序逐层查找上下文。
+- 当从 `<DragonPow2根目录>` 对 `DragonPow2_Trunk_Leaning/`、`DragonPow2_Trunk_Leaning/client/` 等子目录项目开展 AI agent 对话协作时，必须按“顶层目录 -> 项目根目录 -> 子模块目录 -> 目标文件所在目录”的顺序逐层查找上下文。
 - 每一层优先检查 `AGENTS.md`、`CLAUDE.md`、`.skills\`、`.agents\skills\`、`.codex\skills\`、`.agents\docs\`、`docs\`、`reference\`、`references\`、`README.md` 等；任务涉及特定模块时，继续向下检查该模块附近的同类说明、脚本和模板。
 - 发现可用 skill 时，先读取对应 `SKILL.md` 的触发条件和工作流；若 skill 引用 `docs`、`reference`、模板或脚本，按相对路径从该 skill 所在目录解析，只加载与当前任务直接相关的资料。
 - 子目录局部规则用于补充或收窄上层规则；如出现冲突，以更靠近目标项目或目标文件的说明为准，但不得违反 DragonPow2 顶层共享的语言、安全、协议边界和验证规则。
 - 阶段性说明或最终回复中应简要说明已采用的关键层级、skill 或 docs/reference；若某层不存在相关资料，记录后继续向下查找，不要因为顶层已有规则就跳过子项目局部说明。
+
+## 主 Agent、SubAgent 与会话隔离
+
+- 所有用户沟通只由主 Agent 完成；SubAgent 不直接向用户提问、请求授权或交付最终结果，阻塞统一回报主 Agent。
+- 创建 SubAgent 时默认显式使用 `fork_turns="none"`，不得继承完整主会话；主 Agent 必须提供包含绝对工程根、目标、范围、事实、验收标准和返回格式的自包含短任务书。
+- 每个 SubAgent 一次只负责一个工程根，自行读取该工程最近的规则、skills、source of truth 和验证入口；不得继续创建子代理。
+- SubAgent 只返回结论、关键证据路径、修改文件、验证结果、风险和阻塞，不回传完整日志、大段源码或无关背景；默认控制在约 1200 个中文字符以内。
+- 功能或主工程切换前，把稳定状态写入最近的 specs 或 `ai-handoff` 交接文件；使用 `/new` 开启新 Chat，或用 `/clear` 清屏并开启新 Chat。
+- `codex resume` 和 `codex fork` 会保留旧历史，不用于上下文隔离。新 Chat 第一条消息必须声明主工程根、交接文件、当前目标和排除项。
+- Agent 结果只作为证据输入；主 Agent 负责复核文件修改、验证结果、跨工程契约和最终交付。
 
 ## Skill 编写与维护约束
 
 - 新增或修改 DragonPow2 项目内 skill 时，`SKILL.md` frontmatter 的 `description` 必须使用中文描述能力、触发条件和适用场景；正文中的触发条件、工作流、注意事项也必须优先使用中文，不写英文触发语句。
 - 新增项目本地或 Unity 本地 skill 时，优先放在距离使用场景最近的 `.skills\` 目录；不要默认放到 `.agents\skills\`，除非当前工具链明确只扫描该目录。
 - skill 内引用工程文件、脚本、模板、docs、reference、assets 时，只使用相对 skill 目录、相对项目根目录或明确占位变量路径；不得写入 Windows 盘符开头路径、个人用户名目录或其他本机绝对工程路径。
-- 若必须举路径示例，使用 `<项目根目录>\client\...`、`${WORKSPACE_ROOT}\DragonPow2\...` 或 `references/foo.md` 这类可迁移写法；保留 API 名称、命令名、字段名、目录名原文。
+- 若必须举路径示例，使用 `<项目根目录>/client/...`、`<工作区根>/DragonPow2/...` 或 `references/foo.md` 这类可迁移写法；保留 API 名称、命令名、字段名、目录名原文。
 - 更新 skill 后，需要检查 `agents/openai.yaml` 等界面元数据是否仍与 `SKILL.md` 中文描述一致；若触发语义变化，必须同步更新对应元数据。
 
 ## 编码设计原则
@@ -91,7 +101,7 @@ uloop compile --project-path client/Unity --wait-for-domain-reload true
 
 ## Agent 文档统一管理
 
-- 多项目共享规范以 `D:\Projects\DragonPow2\governance\agent-docs\` 为唯一模板源。
-- 修改 `AGENTS.md` / `CLAUDE.md` 的共享规则时，先改模板，再运行 `D:\Projects\DragonPow2\scripts\sync-agent-docs.ps1` 同步。
-- 提交或备份前运行 `D:\Projects\DragonPow2\scripts\check-agent-docs.ps1` 检查各项目托管块是否漂移。
+- 多项目共享规范以 `governance/agent-docs/` 为唯一模板源。
+- 修改 `AGENTS.md` / `CLAUDE.md` 的共享规则时，先改模板，再从 `<DragonPow2根目录>` 运行 `./scripts/sync-agent-docs.ps1` 同步。
+- 提交或备份前从 `<DragonPow2根目录>` 运行 `./scripts/check-agent-docs.ps1` 检查各项目托管块是否漂移。
 - 脚本只管理 `<!-- BEGIN DRAGONPOW2 ... -->` 到 `<!-- END DRAGONPOW2 ... -->` 之间的内容；项目本地补充必须写在托管块之外。

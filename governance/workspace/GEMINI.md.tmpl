@@ -1,54 +1,74 @@
-# Gemini Workspace Instructions
+# Gemini 工作区规则
 
-This file provides Gemini-compatible top-level instructions for the `${WORKSPACE_ROOT}` workspace.
+本文件是 `${WORKSPACE_ROOT}` 顶层规则的 Gemini 版本。若更近目录存在 `AGENTS.md`、`CLAUDE.md`、`GEMINI.md` 或本地 skills，优先使用更近规则。
 
-If a closer repository contains its own rule files, use the closer files first.
+## 工作区模型
 
-## Role
+`${WORKSPACE_ROOT}` 是多仓库工作区。不同仓库可能有不同架构、代码生成流程、版本控制方式和本地治理规则。
 
-Act as a pragmatic engineering assistant across multiple repositories.
-Optimize for correctness, bounded scope, and maintainability.
+动手前先确认：
 
-## Workspace Model
+1. 目标仓库
+2. 最近规则文件
+3. 归属模块和依赖方向
+4. 真正的 source of truth
+5. 验证路径
 
-`${WORKSPACE_ROOT}` is a multi-repo workspace.
-Each repository may have its own architecture, code generation flow, and local governance files.
+## 交互与方案选择
 
-Before editing:
+- 与用户沟通默认使用简体中文；必要技术名词、路径、命令、API 名称保留原文。
+- 目标明确时，选择长期总成本最低的方案，而不是当前看起来最快的方案；但问题规模小、复用概率低、风险边界清晰时，直接使用最简单方案。
+- 好的方案应简单、实用、稳定、可验证、可维护：概念少，只解决当前目标，行为可预测，失败模式清楚，能用测试、构建、日志或数据证明正确，修改点集中且没有隐藏耦合。
+- 从第一性原理出发，先判断真实目标、关键假设、source of truth 和最小可验证闭环；警惕把手段误当目标的 XY 问题。
+- 当错误前提、目标不清或低效路径会影响目标或决策时，必须指出具体问题、影响、缺失信息和替代方案；不能判断时明确说明缺什么。
+- 执行边界：目标清晰且路径合理则直接执行；路径明显不优则先给更优路径，并在不影响任务时继续完成；目标不清、验收缺失、风险过高或影响不可逆时先提问。
+- 回答默认结论优先、理由随后，不做空泛铺垫；用户明确要求特定格式时，以用户当前格式为准。
+- 涉及实际代码或工程改动时，说明改了什么、验证了什么、剩余风险是什么。仅在需要挑战假设、指出长期风险、给出低成本替代方案或补充关键决策时，追加“深度交互”小节；否则省略，不写占位文字。
 
-1. identify the target repo
-2. identify the nearest local instructions
-3. identify owner module and dependency direction
-4. identify the true source of truth
-5. identify the validation path
+## 核心约束
 
-## Hard Constraints
+### 最近规则优先
 
-### Closest rules have priority
+子目录规则覆盖顶层默认规则；不要用顶层规则覆盖仓库内 source of truth。
 
-Deeper repository rules override these top-level defaults.
+### 不跨仓库套用假设
 
-### Do not spread local assumptions globally
+不要把一个仓库的框架、目录、生成流程或验证方式默认套到另一个仓库，除非它们明确共享同一规则。
 
-Do not carry one repository's local framework rules into another repository unless the pattern is explicitly shared.
+### 保护生成物
 
-### Protect generated artifacts
+生成文件、导出文件、缓存输出和 codegen 结果，在证明它就是 source of truth 前都视为受保护产物。优先修改 schema、模板、配置定义或生成器输入。
 
-Prefer editing schemas, templates, config definitions, or generator inputs over editing derived output.
+### 避免失控扫改
 
-### Avoid broad uncontrolled changes
+没有明确影响范围和验证策略，不做跨仓库重写、批量重生成、大规模重命名或格式化扫改。
 
-Do not perform cross-repo rewrite, bulk regeneration, or mass renaming without a clear blast-radius estimate.
+### 沉淀稳定知识
 
-### Preserve durable knowledge
+发现可复用工作流、规则或坑点时，更新最近合适的 skill 或治理文档；不要把项目专属细节上提为全局规则。
 
-If you discover a reusable workflow or rule, update the nearest skill or governance doc.
+### 完成前本地 review
 
-## Writing Style
+创建或修改代码后，完成回复前运行最近的仓库本地 review gate，并把结果带回当前对话。
 
-Prefer Simplified Chinese with precise English technical terms for shared governance documentation.
+`${WORKSPACE_ROOT}\DragonPow2` 下如存在 `Tools/codereview/cr_local.ps1`，从项目根目录运行：
 
-## Related Files
+```powershell
+.\Tools\codereview\cr_local.ps1 -Path @('path\to\changed-file.cs')
+```
+
+review 范围包含改动文件及相关 caller、callee、references、生成项目元数据、skill/tool 镜像。不要发送飞书通知。RED 发现必须修复后再完成。
+
+### 环境与编码基线
+
+跨仓库通用环境/编码纪律；工具实现见 `ai_projects/ai_cli_profiles/profiles/ai-helpers.ps1`（PowerShell `$PROFILE` 链式加载）。
+
+- 开工先 `ai-env-probe`（别名 `aienv`）：以实测 cwd/HOME 为准，不信任注入的平台/路径元数据；判定 SVN 还是 Git 再选命令。
+- Windows 中文统一 UTF-8：`chcp 65001` + 控制台/`$OutputEncoding` UTF-8、`PYTHONUTF8=1`。
+- 含中文的 `.ps1` 存 UTF-8 with BOM；给程序读的 JSON/TOML 写 UTF-8 no BOM。
+- 会话续接用 `ai-handoff -Project -Module -Purpose`。
+
+## 相关文件
 
 - `AGENTS.md`
 - `CLAUDE.md`

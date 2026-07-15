@@ -18,6 +18,8 @@ Entries are grouped under these section headings (in order):
 ## [Unreleased]
 
 ### Added
+- 新增工作区级 `repo_explorer` / `repo_worker` Codex 角色、受控 multi-agent 配置及项目配置同步脚本，默认限制为 2 个线程、1 层委派。
+- 顶层与 DragonPow2 治理模板新增主 Agent 唯一沟通、SubAgent 局部上下文、精简回传和新 Chat 交接规则。
 - `governance/project-overlays/DragonPow2/` for Git-backed DragonPow2 `AGENTS.md` / `CLAUDE.md`, agent-doc templates, and sync/check scripts.
 - `governance/global/codex/AGENTS.md.partial.tmpl` for the user-authored Codex home-level marker section and superpowers activation policy.
 - `governance/workspace-scripts/codex/manage-superpowers.ps1` and `.bat` so the Windows Codex superpowers whitelist manager is versioned and installed from the constitution.
@@ -33,6 +35,8 @@ Entries are grouped under these section headings (in order):
 - Chinese workspace structure and Agent Git-management inventory documents under `docs/`.
 
 ### Changed
+- 工作区 AGENTS/CLAUDE 约束 Paseo 本地文件链接不得把行号写入 Markdown target，避免 Windows 将行号后缀当作文件名并触发 `ENOENT`。
+- 工作区 handoff 统一落到 `${WORKSPACE_ROOT}/ai_handoff/<项目_模块_用途_日期>/`，并明确覆盖通用 handoff skill 的系统临时目录默认值。
 - DragonPow2 skill authoring rules now require Chinese `SKILL.md` trigger descriptions and relative or placeholder paths instead of machine-local absolute project paths.
 - DragonPow2 agent rules now require final responses after code/resource/config/doc changes to include a copyable suggested commit log for manual submission.
 - DragonPow2 uLoop rules now treat unsaved scene/Prefab test blockers as save-and-rerun cases by default, including `Assets/Scenes/Init.unity` causing `Unity.Tests` to report 0 tests.

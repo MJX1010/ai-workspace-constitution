@@ -10,7 +10,7 @@
 
 ## 同步
 
-从 `D:\Projects\DragonPow2` 运行：
+从 `<DragonPow2根目录>` 运行：
 
 ```powershell
 .\scripts\sync-agent-docs.ps1
